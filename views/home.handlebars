@@ -1,0 +1,24 @@
+ <div id="encabezado">
+    <h1>LISTA DE PRODUCTOS</h1>
+ </div>
+ <div id="Lista de productos">
+    {{#each listaproductos}}
+        <h3>TITULO:{{this.title}}</h3>
+        <h3>DESCRIPCION:{{this.description}}</h3>
+        <p>PRECIO:{{this.price}}</p>
+    {{/each}}
+ </div>
+ <div id="bntAddProduct">
+   <button id="btnAP">Agregar al carrito</button>
+ </div>
+ <div id="btnVerMas">
+   <button id="btnAP">VER MAS...</button>
+ </div>
+
+     <article id="list-products">
+      
+    </article>
+
+   
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/index.js"></script>
