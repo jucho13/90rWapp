@@ -10,3 +10,5 @@ UN LOGOUT /LOGOUT
 router.post/login lo borra al minuto 1:56:18
 
 user.views lo cambia alrededor de 1:53:00
+
+clase 22 17 min

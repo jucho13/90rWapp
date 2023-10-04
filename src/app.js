@@ -9,18 +9,20 @@ import { Server } from "socket.io";
 import passport from 'passport';
 import initializePassport from '../config/passport.config.js';
 import productService from '../managers/productManager.js'
-import mongoose from "mongoose";
 import sessionsRouter from '../routes/sessions.router.js'
 import gitHubRouter from '../routes/gitHub.router.js'
 
 // dependencias para las sessions
 import session from 'express-session';
-import MongoStore from 'connect-mongo'
+import MongoStore from 'connect-mongo';
+//import managers
+import dotenv from 'dotenv'; 
+import configEnv from '../config/env.config.js';
+import MongoSingleton from '../config/db.js';
+import envConfig from "../config/env.config.js";
 
 const app=express();
-
-const PORT=8080;
-
+dotenv.config();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(__dirname+ "/public"));
@@ -29,8 +31,8 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/views');
 app.set('view engine', 'handlebars');
 
-// seteo direccion mongo
-const MONGO_URL= 'mongodb://127.0.0.1:27017/Ecommerce?retryWrites=true&w=majority';
+// // seteo direccion mongo
+// const MONGO_URL= 'mongodb://127.0.0.1:27017/Ecommerce?retryWrites=true&w=majority';
 
 
 // SESSIONS 
@@ -45,7 +47,7 @@ app.use(session({
 
   // Usando --> connect-mongo
   store: MongoStore.create({
-      mongoUrl: MONGO_URL,
+      mongoUrl: envConfig.mongoUrl,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 10 * 60
   }),
@@ -68,13 +70,13 @@ app.use('/',RTPRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use("/github", gitHubRouter);
 
+const PORT = configEnv.port;
 // instanciamos socket.io
 const httpServer = app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});
 
 export const socketServer = new Server(httpServer);
 
 // abrimos el canal de comunicacion
-
 const pmanager=new productService();
 
 socketServer.on('connection',async (socket) => {
@@ -102,17 +104,12 @@ socketServer.on('connection',async (socket) => {
 });
 
 
-const connectMongoDB = async () => {
-  try {
-      await mongoose.connect(MONGO_URL);
-      console.log("Conectado con exito a MongoDB usando Moongose.");
-  } catch (error) {
-      console.error("No se pudo conectar a la BD usando Moongose: " + error);
-      process.exit();
-  }
+
+const mongoInstance = async () => {
+    try {
+        await MongoSingleton.getInstance();
+    } catch (error) {
+        console.log(error);
+    }
 };
-connectMongoDB();
-
-
-
-
+mongoInstance();

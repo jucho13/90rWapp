@@ -3,6 +3,7 @@ import passportLocal from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import userModel from '../models/userModel.js';
 import { createHash, isValidPassword } from '../utils.js';
+import envConfig from './env.config.js';
 
 //Declaramos nuestra estrategia:
 const localStrategy = passportLocal.Strategy;
@@ -17,9 +18,9 @@ const initializePassport = () => {
     // TODO: Estrategia de Login con GitHub
     passport.use('github', new GitHubStrategy(
         {
-            clientID: 'Iv1.debf4aa95e921f24',
-            clientSecret: '8150e4b2a5142354b1fe18d4e16e39495155978d',
-            callbackUrl: 'http://localhost:9090/api/sessions/githubcallback'
+            clientID: envConfig.gitHubClientId,
+            clientSecret: envConfig.gitHubClientSecret,
+            callbackUrl: envConfig.gitHubCallbackUrl
         },
         async (accessToken, refreshToken, profile, done) => {
             console.log("Profile obtenido del usuario: ");
