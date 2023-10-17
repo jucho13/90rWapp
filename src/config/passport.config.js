@@ -63,6 +63,8 @@ const initializePassport = () => {
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             const { first_name, last_name, email, age } = req.body;
+            let newCart= await CartService.save();
+            console.log(newCart);
             try {
                 const exists = await userModel.findOne({ email });
                 if (exists) {
@@ -75,7 +77,7 @@ const initializePassport = () => {
                     email,
                     age,
                     password: createHash(password),
-                    cart: CartService.save()._id,
+                    cart: newCart._id,
                     loggedBy: "App"
                 };
                 const result = await userModel.create(user);
