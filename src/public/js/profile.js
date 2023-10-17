@@ -1,9 +1,24 @@
 const socketCliente = io();
 
+function addProdtoCart (price) {
+    socketCliente.emit('prodAgregado', price);
+}
+
 socketCliente.on("all-products", (products) => {
   console.log(products);
   updateProductList(products);
 });
+function agregarAlCarrito (id) {
+  socketCliente.emit('producto', id);
+} 
+const btnAddProdtoCart = document.getElementsByClassName("btnAgregarProd");
+btnAddProdtoCart.forEach((boton) =>{
+  boton.addEventListener('submit',(evt)=>{
+    const productoId = evt.target.id; // Obtén el ID del botón
+    agregarAlCarrito(productoId);
+  })
+})
+
 
 // Función para actualizar la lista de productos en la página web
 function updateProductList (productLista) {
@@ -29,7 +44,7 @@ function updateProductList (productLista) {
             <span></span>
             <span></span>
           </div>
-          <a href="#">Buy Now</a>
+          <a> <button class="btnAgregarProd" id="${product._id}">Agregar al carrito</button> </a>
         </div>
       </div>
       

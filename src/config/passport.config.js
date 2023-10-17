@@ -1,10 +1,12 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
 import GitHubStrategy from 'passport-github2';
-import userModel from '../models/userModel.js';
-import { createHash, isValidPassword } from '../utils.js';
+import userModel from '../services/DAO/db/models/userModel.js';
+import { createHash, isValidPassword } from '../../utils.js';
 import envConfig from './env.config.js';
+import cartService from '../services/DAO/db/cart.service.js';
 
+const CartService= new cartService();
 //Declaramos nuestra estrategia:
 const localStrategy = passportLocal.Strategy;
 const initializePassport = () => {
@@ -73,6 +75,7 @@ const initializePassport = () => {
                     email,
                     age,
                     password: createHash(password),
+                    cart: CartService.save()._id,
                     loggedBy: "App"
                 };
                 const result = await userModel.create(user);

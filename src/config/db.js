@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import envConfig from "./env.config.js";
-dotenv.config()
+dotenv.config();
 
 export default class MongoSingleton {
     static #instance;
@@ -10,7 +10,7 @@ export default class MongoSingleton {
         this.#connectMongoDB();
 } 
 
-    static getInstance() {
+    static getIntance() {
         if (this.#instance) {
             console.log("La conexión a la base de datos ya exite");
         }else{

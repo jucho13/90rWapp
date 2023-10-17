@@ -1,41 +1,40 @@
 import express from "express";
-import productRouter from "../routes/products.router.js";
-import cartRouter from "../routes/carts.router.js";
+import productRouter from "../src/routes/products.router.js";
+import cartRouter from "../src/routes/carts.router.js";
 import { __dirname } from "../utils.js";
-import viewRouter from "../routes/views.router.js";
-import RTPRouter from "../routes/realtimeproducts.router.js";
+import viewRouter from "../src/routes/views.router.js";
+import RTPRouter from "../src/routes/realtimeproducts.router.js";
+import sessionsRouter from '../src/routes/sessions.router.js'
+import gitHubRouter from '../src/routes/gitHub.router.js'
 import handlebars from 'express-handlebars';
 import { Server } from "socket.io";
 import passport from 'passport';
-import initializePassport from '../config/passport.config.js';
-import productService from '../managers/productManager.js'
-import sessionsRouter from '../routes/sessions.router.js'
-import gitHubRouter from '../routes/gitHub.router.js'
-
+import initializePassport from '../src/config/passport.config.js';
+import productService from '../src/services/DAO/db/product.service.js'
 // dependencias para las sessions
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 //import managers
 import dotenv from 'dotenv'; 
-import configEnv from '../config/env.config.js';
-import MongoSingleton from '../config/db.js';
-import envConfig from "../config/env.config.js";
+import envConfig from "../src/config/env.config.js";
+
 
 const app=express();
-dotenv.config();
+// dotenv.config();
+// console.log(envConfig.port);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-app.use(express.static(__dirname+ "/public"));
+app.use(express.static(__dirname+ "/src/public"));
 //config HANDLEBARS
 app.engine('handlebars', handlebars.engine());
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/src/views');
 app.set('view engine', 'handlebars');
 
 // // seteo direccion mongo
 // const MONGO_URL= 'mongodb://127.0.0.1:27017/Ecommerce?retryWrites=true&w=majority';
 
 
-// SESSIONS 
+//SESSIONS 
 app.use(session({
   //ttl: Time to live in seconds,
   //retries: Reintentos para que el servidor lea el archivo del storage.
@@ -70,24 +69,22 @@ app.use('/',RTPRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use("/github", gitHubRouter);
 
-const PORT = configEnv.port;
-// instanciamos socket.io
-const httpServer = app.listen(PORT, () => {console.log(`Server is running on port ${PORT}`)});
+const httpServer = app.listen(envConfig.port, () => {console.log(`Server is running on port ${envConfig.port}`)});
 
 export const socketServer = new Server(httpServer);
 
 // abrimos el canal de comunicacion
-const pmanager=new productService();
+const pService=new productService();
 
 socketServer.on('connection',async (socket) => {
   console.log('Nuevo cliente conectado');
-  const productLista=await pmanager.getAllL();
+  const productLista=await pService.getAllL();
   // let productos=JSON.stringify(productLista);
   socket.emit('all-products', productLista); 
   socket.on('addProduct', async data => {
     console.log(`lo que regresa de add product es ${data.title}${data.description}${data.price}${data.thumbnail}${data.code}${data.stock}${data.status}${data.id}`);
-    const prodCreado=await pmanager.save(data.title,data.description,data.price,data.thumbnail,data.code,data.stock,data.status,data.id=0);
-    const updatedProducts = await pmanager.getAllL(); // Obtener la lista actualizada de productos
+    const prodCreado=await pService.save(data.title,data.description,data.price,data.thumbnail,data.code,data.stock,data.status,data.id=0);
+    const updatedProducts = await pService.getAllL(); // Obtener la lista actualizada de productos
     socket.emit('productosupdated', updatedProducts);
   });
   socket.on("deleteProduct", async (id) => {
@@ -105,11 +102,11 @@ socketServer.on('connection',async (socket) => {
 
 
 
-const mongoInstance = async () => {
-    try {
-        await MongoSingleton.getInstance();
-    } catch (error) {
-        console.log(error);
-    }
-};
-mongoInstance();
+// const mongoInstance = async () => {
+//     try {
+//         await MongoSingleton.getInstance();
+//     } catch (error) {
+//         console.log(error);
+//     }
+// };
+// mongoInstance();

@@ -1,5 +1,5 @@
-import productService from "../managers/productManager.js";
-const manager= new productService();
+import {productService} from "../services/factory.js";
+// const manager= new productService();
 // import { Server } from "socket.io";
 
 // const socket = new Server();
@@ -44,7 +44,7 @@ export const getProducts =  async (req, res) => {
         options.sort = { price: sortMap[sort] };
       }
           
-      const result = await manager.getAll(optionsQuery, options);
+      const result = await productService.getAll(optionsQuery, options);
           
       res.send({ status: "success", payload: result });
     } catch (error) {
@@ -54,7 +54,7 @@ export const getProducts =  async (req, res) => {
 
 export const getProductss = async (req, res) => {
     try {
-      const result = await manager.getAllL();  
+      const result = await productService.getAllL();  
       res.send({ status: "success", payload: result });
     }
     catch{
@@ -69,7 +69,7 @@ export const createProduct = async (req, res) => {
       if (!('status' in productToAdd)) {
         productToAdd.status = true;
       }
-            let product = await manager.save(productToAdd);
+            let product = await productService.save(productToAdd);
       // socket.emit('change');
       if (product){
         res.send({status: "success", payload: product });
@@ -84,7 +84,7 @@ export const createProduct = async (req, res) => {
 export const getProductByID = async (req, res) => {
     const {pid} = req.params;
     console.log(`pid: ${pid}`);
-    const product = await manager.getProductsbyID(pid);
+    const product = await productService.getProductsbyID(pid);
     if(product) {
       res.send({status: "success", payload: product });
     }else {
@@ -95,7 +95,7 @@ export const getProductByID = async (req, res) => {
 export const updateProduct = async (req, res) => {
     const {pid} = req.params;
     console.log(`pid: ${pid}`);
-    const product = await manager.getProductsbyID(pid);
+    const product = await productService.getProductsbyID(pid);
     if(product) {
     // socket.emit('change');
       res.send({status: "success", payload: product });
@@ -106,7 +106,7 @@ export const updateProduct = async (req, res) => {
 
 export const deleteProductByID =async (req, res) => {
     const {pid} = req.params;
-    let p = await manager.delete(pid);
+    let p = await productService.delete(pid);
     // socket.emit('change');
     if(p) {
       res.send({status: "success", payload: p });

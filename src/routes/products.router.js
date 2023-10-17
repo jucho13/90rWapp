@@ -1,9 +1,7 @@
 import {Router} from "express";
-import productService from "../managers/productManager.js";
 import { getProducts, getProductss, createProduct, getProductByID, updateProduct, deleteProductByID } from "../controllers/product.controller.js";
 
 const router = Router();
-const manager = new productService();
 
 router.get('/api/products', getProducts);
 // GET NORMAL PARA PRUEBAS

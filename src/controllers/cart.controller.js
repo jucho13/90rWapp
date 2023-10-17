@@ -1,14 +1,12 @@
-import cartService from "../managers/cartManager.js";
-import productService from "../managers/productManager.js";
-const CartService= new cartService();
-const ProductService= new productService();
+import {cartService,productService} from "../services/factory.js";
+
 // import { Server } from "socket.io";
 
 // const io = new Server();
 
 export const getCarts=  async (req, res) => {
     try {
-      const result = await CartService.getAll();
+      const result = await cartService.getAll();
       // io.emit('newCart', result);
       res.send(result);
   
@@ -20,7 +18,7 @@ export const getCarts=  async (req, res) => {
 
 export const createNewCart= async (req, res) => {
     try {
-      const result = await CartService.save();
+      const result = await cartService.save();
       // io.emit('newCart', result);
       res.send(result);
   
@@ -32,7 +30,7 @@ export const createNewCart= async (req, res) => {
 
 export const deleteCart= async (req, res) => {
     let param = req.params.id;
-    const result = await CartService.delete(param);
+    const result = await cartService.delete(param);
     res.send(result);
 }
 
@@ -51,7 +49,7 @@ export const addProductToCart = async (req, res) => {
       console.log(`Product IDs = ${productIds}`);
   
       // Obtener todos los productos
-      const allProducts = await ProductService.getAllL();
+      const allProducts = await productService.getAllL();
   
       // Filtrar los productos que coinciden con los IDs enviados
       productIds.forEach(productId => {
@@ -62,7 +60,7 @@ export const addProductToCart = async (req, res) => {
       });
   
       // Actualizar el carrito con los productos encontrados
-      const carritoCompleto = await CartService.update(cartId, realProducts);
+      const carritoCompleto = await cartService.update(cartId, realProducts);
       
       return res.status(200).json(carritoCompleto);
     } catch (error) {
@@ -73,11 +71,11 @@ export const addProductToCart = async (req, res) => {
 
 export const getCartbyID = async (req, res) => {
     let param = req.params.id;
-    let cart = await CartService.getCartbyID(param);
+    let cart = await cartService.getCartbyID(param);
     res.send(cart);
 }
 
-export const deleteProductFromCart =  async (req, res) => {
+export async function deleteProductFromCart (req, res)  {
     try {
       let cartIdParam = req.params.id;
       let prodIdParam = req.params.id_prod; 
@@ -86,14 +84,14 @@ export const deleteProductFromCart =  async (req, res) => {
         return res.status(400).json({ error: 'El parámetro id_prod debe estar presente.' });
       }
   
-      let cart = await CartService.getCartbyID(cartIdParam);
+      let cart = await cartService.getCartbyID(cartIdParam);
       const realProducts = [];
   
       console.log(`Cart ID = ${cartIdParam}`);
       console.log(`Product ID = ${prodIdParam}`);
   
       // Obtener todos los productos
-      const allProducts = await ProductService.getAllL();
+      const allProducts = await productService.getAllL();
   
       // Filtrar los productos que no coincidan con el ID a eliminar
       cart.products.forEach((product) => {
@@ -105,7 +103,7 @@ export const deleteProductFromCart =  async (req, res) => {
       });
       // console.log(`REAL PRODUCTS CONTIENE ${JSON.stringify(realProducts)}`);
       // Actualizar el carrito con los productos encontrados
-      const carritoCompleto = await CartService.update(cartIdParam, realProducts);
+      const carritoCompleto = await cartService.update(cartIdParam, realProducts);
   
       return res.status(200).json(carritoCompleto);
     } catch (error) {
