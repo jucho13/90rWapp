@@ -50,9 +50,6 @@ export default class productService {
     let deletes = await productModel.deleteOne({ _id: id });
     return deletes;
   }
-  deleteProd= async (id, idProd) => {
-    let deletes = await productModel.deleteOne ({_id:id, products_id:idProd});
-  }
   getProductsByID = async (id) => {
     let product= await productModel.findOne({ _id: id });
     return product;

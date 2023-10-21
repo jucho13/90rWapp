@@ -1,13 +1,12 @@
 import {cartService,productService} from "../services/factory.js";
 
-// import { Server } from "socket.io";
+import { Server } from "socket.io";
 
-// const io = new Server();
+const io = new Server();
 
 export const getCarts=  async (req, res) => {
     try {
       const result = await cartService.getAll();
-      // io.emit('newCart', result);
       res.send(result);
   
   }
@@ -21,7 +20,6 @@ export const createNewCart= async (req, res) => {
       const result = await cartService.save();
       // io.emit('newCart', result);
       res.send(result);
-  
     }
     catch (error) {
       res.status(500).json({ error: `Ocurrió un error en el servidor: ${error}` });
@@ -31,11 +29,31 @@ export const createNewCart= async (req, res) => {
 export const deleteCart= async (req, res) => {
     let param = req.params.id;
     const result = await cartService.delete(param);
+    // io.emit('newCart', result);
     res.send(result);
 }
+export const addProductToCartByApp = async (req, res) => {
+  try {
+    console.log(req.body);
+    const cartId = req.body.cartID;
+    const productID = req.body.productoId;
+
+    console.log(`Cart ID = ${cartId}`);
+    console.log(`ID PROD ${productID} TO ADD TO CART ${cartId}`)
+    const carritoCompleto = await cartService.update(cartId, productID);
+    
+    // io.emit('newCart', result);
+    return res.status(200).json(carritoCompleto);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: 'Ocurrió un error en el servidor.' });
+  }
+}
+
 
 export const addProductToCart = async (req, res) => {
     try {
+      console.log(req.body);
       const cartId = req.params.id;
       const productIds = req.body.productIds; // debe enviarse un _id de un producto por el body con la propiedad 'productIds'
   
@@ -47,10 +65,14 @@ export const addProductToCart = async (req, res) => {
   
       console.log(`Cart ID = ${cartId}`);
       console.log(`Product IDs = ${productIds}`);
-  
+      if(!cartId)
+      {
+        cartId=req.body.cartId;
+      }
+      console.log(`Cart ID = ${cartId}`);
       // Obtener todos los productos
       const allProducts = await productService.getAllL();
-  
+      
       // Filtrar los productos que coinciden con los IDs enviados
       productIds.forEach(productId => {
         const matchingProduct = allProducts.find(product => product.id === productId);
@@ -61,7 +83,7 @@ export const addProductToCart = async (req, res) => {
   
       // Actualizar el carrito con los productos encontrados
       const carritoCompleto = await cartService.update(cartId, realProducts);
-      
+      // io.emit('newCart', result);
       return res.status(200).json(carritoCompleto);
     } catch (error) {
       console.error(error);
@@ -104,7 +126,7 @@ export async function deleteProductFromCart (req, res)  {
       // console.log(`REAL PRODUCTS CONTIENE ${JSON.stringify(realProducts)}`);
       // Actualizar el carrito con los productos encontrados
       const carritoCompleto = await cartService.update(cartIdParam, realProducts);
-  
+      // io.emit('newCart', result);
       return res.status(200).json(carritoCompleto);
     } catch (error) {
       // Handle errors appropriately

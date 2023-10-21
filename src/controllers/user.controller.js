@@ -1,3 +1,7 @@
+import { Server } from "socket.io";
+import {productService} from "../services/factory.js";
+const socket= new Server();
+
 export const vistaNormal = (req,res)=>{
     res.render('index',{})
 };
@@ -28,8 +32,16 @@ export const register = (req, res) => {
     res.render('register');
 }
 
-export const profile = (req, res) => {
-    res.render('profile');
+export const profile = async (req, res) => {
+    try{
+    const cartID= req.session.user.cart;
+    const products= await productService.getAllL();
+    res.cookie('cart', cartID, {maxage: 3000000});
+    res.render('index', {user:req.session.user});
+}
+    catch(error){
+        res.send(error);
+    }
 }
 
 //private

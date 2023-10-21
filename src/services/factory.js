@@ -3,7 +3,7 @@ import MongoSingleton from '../config/db.js'
 
 let productService
 let cartService
-
+let ticketService;
 async function initializeMongoService() {
     console.log("Iniciando servicio para MongoDB");
     try {
@@ -21,7 +21,11 @@ async function initializeMongoService() {
         console.log("Servicio de carts cargado:");
         console.log(cartService);
 
-
+        const { default: ticketServiceMongo } = await import('./DAO/db/ticket.service.js');
+        ticketService= new ticketServiceMongo();
+        console.log("Servicio de tickets cargado:");
+        console.log(ticketService);
+    
     } catch (error) {
         console.error("Error al iniciar MongoDB:", error);
         process.exit(1); // Salir con código de error
@@ -51,4 +55,4 @@ switch (config.persistence) {
 }
 
 
-export { productService, cartService }
+export { productService, cartService, ticketService }

@@ -6,6 +6,7 @@ import viewRouter from "../src/routes/views.router.js";
 import RTPRouter from "../src/routes/realtimeproducts.router.js";
 import sessionsRouter from '../src/routes/sessions.router.js'
 import gitHubRouter from '../src/routes/gitHub.router.js'
+import ticketRouter from './routes/ticket.router.js'
 import handlebars from 'express-handlebars';
 import { Server } from "socket.io";
 import passport from 'passport';
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(__dirname+ "/src/public"));
 //config HANDLEBARS
+
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/src/views');
 app.set('view engine', 'handlebars');
@@ -68,6 +70,7 @@ app.use('/', viewRouter);
 app.use('/',RTPRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use("/github", gitHubRouter);
+app.use("/ticket", ticketRouter);
 
 const httpServer = app.listen(envConfig.port, () => {console.log(`Server is running on port ${envConfig.port}`)});
 
@@ -100,13 +103,3 @@ socketServer.on('connection',async (socket) => {
   });
 });
 
-
-
-// const mongoInstance = async () => {
-//     try {
-//         await MongoSingleton.getInstance();
-//     } catch (error) {
-//         console.log(error);
-//     }
-// };
-// mongoInstance();

@@ -1,7 +1,9 @@
 import {Router} from 'express';
 import passport from 'passport';
 import { sessionManagement, vistaNormal, privateMood, failRegister, failLogin, register, profile, logOut, login} from '../controllers/user.controller.js';
+import { Server } from "socket.io";
 const router = Router();
+const socket= new Server();
 
 
 router.get('/', vistaNormal);
@@ -18,12 +20,12 @@ router.post("/login", passport.authenticate("login", { failureRedirect: '/fail-l
     console.log("User found to login:");
     const user = req.user;
     console.log(user);
-
     if (!user) return res.status(401).send({ status: "error", error: "credenciales incorrectas" });
     req.session.user = {
         name: `${user.first_name} ${user.last_name}`,
         email: user.email,
-        age: user.age
+        age: user.age,
+        cart: user.cart
     }
     res.redirect("/profile");
 });

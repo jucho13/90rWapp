@@ -7,19 +7,11 @@
 </header>
 <nav>
     <p>USUARIO EMAIL:{{user.email}}</p>
-   {{#if product}}
-   {{#each product}}
-    <div class="producto">
-      <img src="{{this.thumbnail}}">
-      <h2>{{this.title}}</h2>
-      <p>{{this.description}}</p>
-      <span>{{this.price}}</span>
-      <button class="btnAgregarProd" id={{this._id}}>Agregar al carrito</button>
+    <div id="producto">
+     
     </div>
-  {{/each}}
-  {{else}}
-    <h2>NO HAY PRODUCTOS</h2>
-  {{/if}}
+
+  
 </nav> 
 
   
