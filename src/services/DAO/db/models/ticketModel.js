@@ -19,7 +19,7 @@ const ticketsSchema = new mongoose.Schema({
         type: [
             {
                 product: {
-                    type: mongoose.Schema.Types.ObjectId,
+                    type: String,
                     ref: 'products'
                 },
                 quantity: numberRequiredIndex
@@ -31,7 +31,7 @@ const ticketsSchema = new mongoose.Schema({
         type: [
             {
                 notAvailableProduct: {
-                    type: mongoose.Schema.Types.ObjectId,
+                    type: String,
                     ref: 'products'
                 },
                 quantity: numberRequiredIndex

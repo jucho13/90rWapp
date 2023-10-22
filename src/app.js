@@ -7,6 +7,7 @@ import RTPRouter from "../src/routes/realtimeproducts.router.js";
 import sessionsRouter from '../src/routes/sessions.router.js'
 import gitHubRouter from '../src/routes/gitHub.router.js'
 import ticketRouter from './routes/ticket.router.js'
+import chatRouter from './routes/chat.router.js'
 import handlebars from 'express-handlebars';
 import { Server } from "socket.io";
 import passport from 'passport';
@@ -16,8 +17,10 @@ import productService from '../src/services/DAO/db/product.service.js'
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 //import managers
+import { chatService } from "./services/factory.js";
 import dotenv from 'dotenv'; 
 import envConfig from "../src/config/env.config.js";
+
 
 
 const app=express();
@@ -71,6 +74,7 @@ app.use('/',RTPRouter);
 app.use('/api/sessions',sessionsRouter);
 app.use("/github", gitHubRouter);
 app.use("/ticket", ticketRouter);
+app.use("/messages", chatRouter);
 
 const httpServer = app.listen(envConfig.port, () => {console.log(`Server is running on port ${envConfig.port}`)});
 
@@ -96,6 +100,10 @@ socketServer.on('connection',async (socket) => {
     console.log(`Operacion ${op}`);
     const updatedProducts = await pmanager.getAllL();
     socketServer.emit("productosupdated", updatedProducts);
+  });
+  socket.on('new-message', async () => {
+    const messages = await chatService.getMessages();
+    socket.emit('messages', messages);
   });
   
   socket.on('disconnect', () => {

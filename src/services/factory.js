@@ -1,8 +1,9 @@
 import config from "../config/env.config.js";
 import MongoSingleton from '../config/db.js'
 
-let productService
-let cartService
+let chatService;
+let productService;
+let cartService;
 let ticketService;
 async function initializeMongoService() {
     console.log("Iniciando servicio para MongoDB");
@@ -25,6 +26,11 @@ async function initializeMongoService() {
         ticketService= new ticketServiceMongo();
         console.log("Servicio de tickets cargado:");
         console.log(ticketService);
+
+        const { default: chatServiceMongo } = await import('./DAO/db/chat.service.js');
+        chatService= new chatServiceMongo();
+        console.log("Servicio de chat cargado:");
+        console.log(chatService);
     
     } catch (error) {
         console.error("Error al iniciar MongoDB:", error);
@@ -55,4 +61,4 @@ switch (config.persistence) {
 }
 
 
-export { productService, cartService, ticketService }
+export { productService, cartService, ticketService, chatService }

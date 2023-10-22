@@ -15,14 +15,15 @@ export default class ticketService {
                 let productsWithNoStock = [];
                 let productsWithStock = [];
                 let productsPostPurchase = [];
-                let productNo;
-                let productYes;
+                let productNoAvailable;
+                let productAvailable;
                 let productPostPurchase;
                 for (let i = 0; i < products.length; i++) {
-                    let product = await productService.getProductsByID(products[i].product._id);
+                    let product = await productService.getProductsByID(products[i].productId);
+                    console.log(`ticket product ${product}`);
                     if (product.stock < products[i].quantity) {
                         //De este producto NO hay Stock
-                        productNo = {
+                        productNoAvailable = {
                             notAvailableProduct: product._id,
                             quantity: products[i].quantity
                         }
@@ -31,15 +32,15 @@ export default class ticketService {
                             product: product._id,
                             quantity: products[i].quantity
                         }
-                        productsWithNoStock.push(productNo);
+                        productsWithNoStock.push(productNoAvailable);
                         productsPostPurchase.push(productPostPurchase);
                     } else {
                         //De este producto SI hay Stock
-                        productYes = {
+                        productAvailable = {
                             product: product._id,
                             quantity: products[i].quantity
                         }
-                        productsWithStock.push(productYes);
+                        productsWithStock.push(productAvailable);
                         total += (product.price * products[i].quantity);
                         //actualizo el stock del producto
                         product.stock = product.stock - products[i].quantity;

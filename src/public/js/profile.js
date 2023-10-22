@@ -4,67 +4,15 @@
 // //   console.log(products);
 // //   updateProductList(products);
 // // });
-
-// function agregarAlCarrito (idCart,id) {
-//   socketCliente.emit('agregarProducto', idCart, id);
-// }
-
-
-// function getCookie(name) {
-//   const cookieString = document.cookie;
-//   console.log(cookieString);
-//   const cookies = cookieString.split('; ');
-//   for (const cookie of cookies) {
-//     const [cookieName, cookieValue] = cookie.split('=');
-//     if (cookieName === name) {
-//       return decodeURIComponent(cookieValue);
-//     }
-//   }
-//   return null; // La cookie no fue encontrada
-// }
-
-
-// function getCartID(){
-//   const id = getCookie('cart'); 
-//   return id;
-// } 
-
-// const prod= fetch('/api/productss', {
-//   method: 'GET', 
-// })
-//   .then(response => {
-//     if (!response.ok) {
-//       throw new Error('Error al obtener los productos');
-//     }
-//     return response.json(); // Parsea la respuesta JSON
-//   })
-//   .then(productos => {
-//     updateProductList(productos);
-//     console.log(productos);
-//   })
-//   .catch(error => {
-//     console.error(error);
-//   })
-//   function agregarAlCarrito(cartID, productoId) {
-//     try {
-//       const response = fetch('/api/cart', {
-//         method: 'POST', 
-//         headers: {
-//           'Content-Type': 'application/json', // Ajusta los encabezados según tus necesidades
-//         },
-//         body: JSON.stringify({ cartID, productoId }),
-//       });
+let btnTicket= document.getElementById('cart');
+let cartID;
+btnTicket.addEventListener('click', async () => {
+  cartID=getCartID();
+  await mostrarTicket(cartID)
+})
+async function mostrarTicket(cartID){
   
-//       if (response.ok) {
-//         console.log('Producto agregado al carrito exitosamente.');
-//       } else {
-//         console.error('Error al agregar el producto al carrito.');
-//       }
-//     } catch (error) {
-//       console.error('Error en la solicitud Fetch:', error);
-//     }
-//   }
-
+}
 function updateProductList (productLista) {
   if (!Array.isArray(productLista.payload)) {
     console.log(productLista);
