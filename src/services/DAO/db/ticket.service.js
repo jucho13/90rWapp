@@ -7,6 +7,8 @@ export default class ticketService {
     cart;
     
     createTicket = async (cartId, user) => {
+        console.log(cartId);
+        console.log(user);
         this.cart = await cartService.getCartbyID(cartId);
         if (this.cart && user.name && user.email) {
                 //valido si los productos comprados tienen stock

@@ -17,9 +17,9 @@ import productService from '../src/services/DAO/db/product.service.js'
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 //import managers
-import { chatService } from "./services/factory.js";
+import { cartService, chatService } from "./services/factory.js";
 import dotenv from 'dotenv'; 
-import envConfig from "../src/config/env.config.js";
+import envConfig from "../src/config/env.config.js";6
 
 
 
@@ -82,6 +82,7 @@ export const socketServer = new Server(httpServer);
 
 // abrimos el canal de comunicacion
 const pService=new productService();
+let carrito;
 
 socketServer.on('connection',async (socket) => {
   console.log('Nuevo cliente conectado');
@@ -105,6 +106,11 @@ socketServer.on('connection',async (socket) => {
     const messages = await chatService.getMessages();
     socket.emit('messages', messages);
   });
+  socket.on('solicitudDeCart',async (cartID)=>{
+    carrito=await cartService.getCartbyID(cartID);
+    console.log(carrito);
+    socket.emit('recibirCart', carrito);
+})
   
   socket.on('disconnect', () => {
       console.log('Un cliente se ha desconectado');

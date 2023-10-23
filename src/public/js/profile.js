@@ -1,17 +1,56 @@
-// const socketCliente = io();
+const socketCliente = io();
 
 // // socketCliente.on("all-products", (products) => {
 // //   console.log(products);
 // //   updateProductList(products);
 // // });
-let btnTicket= document.getElementById('cart');
+let btnCart= document.getElementById('cart');
 let cartID;
-btnTicket.addEventListener('click', async () => {
-  cartID=getCartID();
-  await mostrarTicket(cartID)
+btnCart.addEventListener('click', async () => {
+  cartID=await getCartID();
+  try {
+    const response = await fetch('/ticket', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json', // Ajusta los encabezados según tus necesidades
+      },
+      body: JSON.stringify({ cartID}),
+    });
+  
+    if (response.ok) {
+      const responseData = await response.json();
+      if (responseData) {
+        console.log('exito', responseData);
+        return responseData;
+      } else {
+        console.error('Respuesta JSON vacía o inválida.');
+        return null;
+      }
+    } else {
+      console.error('Error.');
+      return null;
+    }
+  }
+  catch(error){
+    console.log(error);
+  }
 })
 async function mostrarTicket(cartID){
-  
+  try {
+    const response = await fetch('/ticket/${cartID}', {
+      method: 'GET',
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al obtener el ticket ');
+    }
+
+    const ticket = await response.json();
+    return ticket;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
 }
 function updateProductList (productLista) {
   if (!Array.isArray(productLista.payload)) {
@@ -67,7 +106,7 @@ function updateProductList (productLista) {
 //       alert('producto agregado');
 //     });
 //   });
-const socketCliente = io();
+
 
 // socketCliente.on("all-products", (products) => {
 //   console.log(products);
