@@ -1,15 +1,22 @@
 import {ticketService} from '../services/factory.js'
 
 const ticketController = async (req, res) => {
-    const tid = req.params.tid;
-    const ticketData = await ticketService.loadTicket({_id:tid});
-    res.render('ticket', { ticket: ticketData });
+    const purchaser = req.user.email;
+    console.log(`purchaser ${purchaser}`);
+    const ticketData = await ticketService.findTicketByPurchaser(purchaser);
+    console.log(ticketData);
+    res.render('ticket', {ticket: ticketData });
 }
 const ticketControllerPost = async (req, res) => {
-    const tid = req.body;
+    const cid = req.body.valorDeseado;
     const user = req.session.user;
-    const ticketData = await ticketService.createTicket(tid,user);
-    res.render('ticket', { ticket: ticketData });
+    console.log(user);
+    console.log(`cid ${cid}`);
+    console.log(`user ${user}`);
+    const ticketData = await ticketService.createTicket(cid,user);
+    console.log(`TICKET DATA: ${ticketData}`);
+    console.log(`new session user ${req.session.user.ticketId}`);  
+    res.redirect("/ticket/vistas");
 }
 const verCarritoController = async (req, res) => {
     const user= req.session.user;
@@ -17,4 +24,4 @@ const verCarritoController = async (req, res) => {
     res.render('cartView' ,{user: user});
 }
 
-export { ticketController,ticketControllerPost, verCarritoController }
+export { ticketController, verCarritoController, ticketControllerPost}

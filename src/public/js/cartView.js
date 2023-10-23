@@ -1,7 +1,7 @@
 const socketCliente = io();
 
 const btnTicket= document.getElementById('verTicket');
-
+console.log(`btnTicket${btnTicket}`);
 const cart= document.getElementById('cart');
 let cartProducts;
 socketCliente.on('recibirCart', async (cart)=>{
@@ -54,7 +54,21 @@ if (match && match[1]) {
   console.log("No se encontró ningún valor en el formato esperado.");
 }
 btnTicket.addEventListener('click', async ()=>{
-  fetch
+  try {
+    console.log('aiuda');
+    const response = await fetch(`/ticket/vista`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json', // Ajusta los encabezados según tus necesidades
+      },
+      body: JSON.stringify({valorDeseado: valorDeseado}),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    })}
+    catch (error) {
+       console.log(error);
+    }
 })
 console.log(valorDeseado);
 socketCliente.emit('solicitudDeCart', valorDeseado);

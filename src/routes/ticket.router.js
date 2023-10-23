@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { ticketController, ticketControllerPost,verCarritoController} from '../controllers/ticket.controller.js';
+import { ticketController,verCarritoController,ticketControllerPost} from '../controllers/ticket.controller.js';
 const router = Router();
 
 router.get('/', verCarritoController);
-router.get("/:tid", ticketController);
-router.post("/",ticketControllerPost);
+router.get("/vistas", ticketController);
+router.post("/vista",ticketControllerPost);
 
 export default router;
