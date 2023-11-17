@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 
 export default class cartService {
   constructor() { 
-      console.log("Working carts with Database persistence in mongodb");
+      // console.log("Working carts with Database persistence in mongodb");
   }
 
   getAll = async () => {
@@ -15,7 +15,7 @@ export default class cartService {
       return result;
   }
   saveProducts = async (idCart,data)=>{ 
-    console.log(data);
+    // console.log(data);
     const result=await cartModel.updateOne({_id:idCart}, {products: data})
     return result;
   }
@@ -48,8 +48,8 @@ export default class cartService {
   // };
   update = async (id, idProd) => {
     try {
-      console.log(`ID CART ${id}`);
-      console.log(`ID PROD ${idProd}`);
+      // console.log(`ID CART ${id}`);
+      // console.log(`ID PROD ${idProd}`);
       
       const cart = await cartModel.findOne({ _id: id });
       
@@ -64,14 +64,14 @@ export default class cartService {
         cart.products.push({ productId: idProd, quantity: 1 });
       }
       
-      console.log(`products a guardar ${cart.products}`);
+      // console.log(`products a guardar ${cart.products}`);
       
       // Ahora actualizamos el documento en la base de datos usando updateOne
       const result = await cartModel.updateOne({ _id: id }, { products: cart.products });
       
       return { message: "success", payload: result };
     } catch (err) {
-      console.error('Error al actualizar el documento:', err);
+      // console.error('Error al actualizar el documento:', err);
     }
   };
   
@@ -85,7 +85,7 @@ export default class cartService {
   }
   deleteProd = async (cartID, productID) => {
     const cart = await this.getCartbyID(cartID);
-    console.log(cart);
+    // console.log(cart);
     if (!cart) {
       return { error: 'Carrito no encontrado' };
     }

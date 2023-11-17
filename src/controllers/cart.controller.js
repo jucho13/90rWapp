@@ -34,18 +34,18 @@ export const deleteCart= async (req, res) => {
 }
 export const addProductToCartByApp = async (req, res) => {
   try {
-    console.log(req.body);
+    // console.log(req.body);
     const cartId = req.body.cartID;
     const productID = req.body.productoId;
 
-    console.log(`Cart ID = ${cartId}`);
-    console.log(`ID PROD ${productID} TO ADD TO CART ${cartId}`)
+    // console.log(`Cart ID = ${cartId}`);
+    // console.log(`ID PROD ${productID} TO ADD TO CART ${cartId}`)
     const carritoCompleto = await cartService.update(cartId, productID);
     
     // io.emit('newCart', result);
     return res.status(200).json(carritoCompleto);
   } catch (error) {
-    console.error(error);
+    // console.error(error);
     return res.status(500).json({ error: 'Ocurrió un error en el servidor.' });
   }
 }
@@ -53,7 +53,7 @@ export const addProductToCartByApp = async (req, res) => {
 
 export const addProductToCart = async (req, res) => {
     try {
-      console.log(req.body);
+      // console.log(req.body);
       const cartId = req.params.id;
       const productIds = req.body.productIds; // debe enviarse un _id de un producto por el body con la propiedad 'productIds'
   
@@ -63,13 +63,13 @@ export const addProductToCart = async (req, res) => {
   
       const realProducts = [];
   
-      console.log(`Cart ID = ${cartId}`);
-      console.log(`Product IDs = ${productIds}`);
+      // console.log(`Cart ID = ${cartId}`);
+      // console.log(`Product IDs = ${productIds}`);
       if(!cartId)
       {
         cartId=req.body.cartId;
       }
-      console.log(`Cart ID = ${cartId}`);
+      // console.log(`Cart ID = ${cartId}`);
       // Obtener todos los productos
       const allProducts = await productService.getAllL();
       
@@ -86,7 +86,7 @@ export const addProductToCart = async (req, res) => {
       // io.emit('newCart', result);
       return res.status(200).json(carritoCompleto);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       return res.status(500).json({ error: 'Ocurrió un error en el servidor.' });
     }
 }
@@ -109,8 +109,8 @@ export async function deleteProductFromCart (req, res)  {
       let cart = await cartService.getCartbyID(cartIdParam);
       const realProducts = [];
   
-      console.log(`Cart ID = ${cartIdParam}`);
-      console.log(`Product ID = ${prodIdParam}`);
+      // console.log(`Cart ID = ${cartIdParam}`);
+      // console.log(`Product ID = ${prodIdParam}`);
   
       // Obtener todos los productos
       const allProducts = await productService.getAllL();
@@ -130,7 +130,7 @@ export async function deleteProductFromCart (req, res)  {
       return res.status(200).json(carritoCompleto);
     } catch (error) {
       // Handle errors appropriately
-      console.error(error);
+      // console.error(error);
       return res.status(500).json({ error: 'Ha ocurrido un error en el servidor.' });
     }
 }

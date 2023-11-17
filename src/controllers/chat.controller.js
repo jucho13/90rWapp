@@ -9,8 +9,8 @@ const getRenderChatController = async (req, res) => {
 const postNewChatController = async (req, res) => {
     const userName = req.body.userName;
     const message = req.body.message;
-    console.log(userName);
-    console.log(message);
+    // console.log(userName);
+    // console.log(message);
     if (userName && message) {
         const result = await chatService.writeMessage(userName, message);
         // io.emit('message', message);

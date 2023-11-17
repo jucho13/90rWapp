@@ -12,7 +12,7 @@ export default class MongoSingleton {
 
     static getIntance() {
         if (this.#instance) {
-            console.log("La conexión a la base de datos ya exite");
+            console.log("La conexión a la base de datos ya existe");
         }else{
             this.#instance = new MongoSingleton();
         }

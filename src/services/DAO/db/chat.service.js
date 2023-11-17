@@ -2,7 +2,7 @@ import { chatModel } from '../db/models/chatModel.js';
 export default class chatService {
     constructor() {
         this.messages = [];
-        console.log(this.messages);
+        // console.log(this.messages);
     }
 
     async getMessages() {
@@ -10,7 +10,7 @@ export default class chatService {
             const messages = await chatModel.find({});
             return messages;
         } catch (error) {
-            console.log(error);
+            // console.log(error);
         }
     }
 
@@ -19,7 +19,7 @@ export default class chatService {
             await chatModel.create({ user: userId, message: message });
             return '{"status": "ok", "message": "Message created successfully"}';
         } catch (error) {
-            console.log(error);
+            // console.log(error);
             return '{"status": "failed", "message": "Error when creating message"}';
         }
     }

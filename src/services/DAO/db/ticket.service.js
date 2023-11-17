@@ -7,14 +7,14 @@ export default class ticketService {
     cart;
     
     createTicket = async (cartId, user) => {
-        console.log(cartId);
-        console.log(user);
+        // console.log(cartId);
+        // console.log(user);
         this.cart = await cartService.getCartbyID(cartId);
-        console.log(this.cart);
+        // console.log(this.cart);
         if (this.cart && user.name && user.email) {
                 //valido si los productos comprados tienen stock
                 let products = this.cart.products;
-                console.log(products);
+                // console.log(products);
                 let total = 0;
                 let productsWithNoStock = [];
                 let productsWithStock = [];
@@ -24,7 +24,7 @@ export default class ticketService {
                 let productPostPurchase;
                 for (let i = 0; i < products.length; i++) {
                     let product = await productService.getProductsByID(products[i].productId);
-                    console.log(`ticket product ${product}`);
+                    // console.log(`ticket product ${product}`);
                     if (product !== null){
                         if (product.stock < products[i].quantity) {
                             //De este producto NO hay Stock
@@ -73,7 +73,7 @@ export default class ticketService {
             const ticket = await ticketModel.findOne( {purchaser: purchaser });
             return ticket;
         } catch (error) {
-            console.log("ERROR: " + error);
+            // console.log("ERROR: " + error);
         }
     }
     loadTicket = async (ticketId) => {
@@ -81,7 +81,7 @@ export default class ticketService {
             const ticket = await ticketModel.findOne( {_id: ticketId });
             return ticket;
         } catch (error) {
-            console.log("ERROR: " + error);
+            // console.log("ERROR: " + error);
         }
     }
 }

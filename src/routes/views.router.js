@@ -12,14 +12,14 @@ router.get("/session", sessionManagement);
 //Login
 router.get('/login', login);
 router.post("/register", passport.authenticate('register', { failureRedirect: '/fail-register' }), async (req, res) => {
-    console.log("Registrando nuevo usuario.");
+    // console.log("Registrando nuevo usuario.");
     res.redirect("/login");    
 })
 
 router.post("/login", passport.authenticate("login", { failureRedirect: '/fail-login' }), async (req, res) => {
-    console.log("User found to login:");
+    // console.log("User found to login:");
     const user = req.user;
-    console.log(user);
+    // console.log(user);
     if (!user) return res.status(401).send({ status: "error", error: "credenciales incorrectas" });
     req.session.user = {
         name: `${user.first_name} ${user.last_name}`,

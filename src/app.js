@@ -96,9 +96,9 @@ socketServer.on('connection',async (socket) => {
     socket.emit('productosupdated', updatedProducts);
   });
   socket.on("deleteProduct", async (id) => {
-    console.log("ID del producto a eliminar:", id);
+    // console.log("ID del producto a eliminar:", id);
     const op=  await pmanager.delete(id);
-    console.log(`Operacion ${op}`);
+    // console.log(`Operacion ${op}`);
     const updatedProducts = await pmanager.getAllL();
     socketServer.emit("productosupdated", updatedProducts);
   });
@@ -108,7 +108,7 @@ socketServer.on('connection',async (socket) => {
   });
   socket.on('solicitudDeCart',async (cartID)=>{
     carrito=await cartService.getCartbyID(cartID);
-    console.log(carrito);
+    // console.log(carrito);
     socket.emit('recibirCart', carrito);
 })
   

@@ -65,7 +65,7 @@ export const getProductss = async (req, res) => {
 export const createProduct = async (req, res) => {
     try {
       let productToAdd = req.body;
-      console.log(`Proximo producto a ser agregado ${productToAdd.title} ${productToAdd.description}`);
+      // console.log(`Proximo producto a ser agregado ${productToAdd.title} ${productToAdd.description}`);
       if (!('status' in productToAdd)) {
         productToAdd.status = true;
       }
@@ -83,7 +83,7 @@ export const createProduct = async (req, res) => {
 
 export const getProductByID = async (req, res) => {
     const {pid} = req.params;
-    console.log(`pid: ${pid}`);
+    // console.log(`pid: ${pid}`);
     const product = await productService.getProductsbyID(pid);
     if(product) {
       res.send({status: "success", payload: product });
@@ -94,7 +94,7 @@ export const getProductByID = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
     const {pid} = req.params;
-    console.log(`pid: ${pid}`);
+    // console.log(`pid: ${pid}`);
     const product = await productService.getProductsbyID(pid);
     if(product) {
     // socket.emit('change');

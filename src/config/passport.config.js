@@ -25,16 +25,16 @@ const initializePassport = () => {
             callbackUrl: envConfig.gitHubCallbackUrl
         },
         async (accessToken, refreshToken, profile, done) => {
-            console.log("Profile obtenido del usuario: ");
-            console.log(profile);
+            // console.log("Profile obtenido del usuario: ");
+            // console.log(profile);
 
             try {
                 const user = await userModel.findOne({ email: profile._json.email })
-                console.log("Usuario encontrado para login:");
-                console.log(user);
+                // console.log("Usuario encontrado para login:");
+                // console.log(user);
 
                 if (!user) {
-                    console.warn("User doesn't exists with username: " + profile._json.email);
+                    // console.warn("User doesn't exists with username: " + profile._json.email);
                     let newUser = {
                         first_name: profile._json.name,
                         last_name: '',
@@ -68,7 +68,7 @@ const initializePassport = () => {
             try {
                 const exists = await userModel.findOne({ email });
                 if (exists) {
-                    console.log("El usuario ya existe.");
+                    // console.log("El usuario ya existe.");
                     return done(null, false);
                 }
                 const user = {
@@ -94,14 +94,14 @@ const initializePassport = () => {
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             try {
                 const user = await userModel.findOne({ email: username });
-                console.log("Usuario encontrado para login:");
+                // console.log("Usuario encontrado para login:");
                 console.log(user);
                 if (!user) {
-                    console.warn("User doesn't exists with username: " + username);
+                    // console.warn("User doesn't exists with username: " + username);
                     return done(null, false);
                 }
                 if (!isValidPassword(user, password)) {
-                    console.warn("Invalid credentials for user: " + username);
+                    // console.warn("Invalid credentials for user: " + username);
                     return done(null, false);
                 }
                 return done(null, user);

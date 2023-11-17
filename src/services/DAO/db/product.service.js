@@ -2,13 +2,13 @@ import { productModel } from "../db/models/productModel.js";
 
 export default class productService {
   constructor() { 
-      console.log("Working products with Database persistence in mongodb");
+      // console.log("Working products with Database persistence in mongodb");
   }
   isThisCodeRepeated= async (code)=>{
   const listaProd=await this.getAllL();
-  console.log(`lista prod title:${listaProd[0].title},lista prod: ${listaProd[0].price}`);
+  // console.log(`lista prod title:${listaProd[0].title},lista prod: ${listaProd[0].price}`);
   const isCodeRepeated = listaProd.some((product) => product.code === code);
-  console.log(isCodeRepeated);
+  // console.log(isCodeRepeated);
   if (!isCodeRepeated) {
     return true;
     }
@@ -29,12 +29,12 @@ export default class productService {
     return products;
   }
   save = async (product) => {
-    console.log(`en el comienzo de save ${product.code}`);
+    // console.log(`en el comienzo de save ${product.code}`);
     let validCode= await this.isThisCodeRepeated(product.code);
     if (validCode === true)
     {
       let result = await productModel.create(product);
-      console.log(result);
+      // console.log(result);
       return result;
     }
     else
