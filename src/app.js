@@ -1,4 +1,7 @@
 import express from "express";
+import swaggerJSDoc from 'swagger-jsdoc';
+import swaggerUIExpress from 'swagger-ui-express';
+import { swaggerOptions } from "../utils.js";
 import productRouter from "../src/routes/products.router.js";
 import cartRouter from "../src/routes/carts.router.js";
 import { __dirname } from "../utils.js";
@@ -66,6 +69,9 @@ initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
+const specs = swaggerJSDoc(swaggerOptions);
+app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
+
 //rutas
 app.use("/",productRouter);
 app.use("/",cartRouter);
@@ -80,26 +86,27 @@ const httpServer = app.listen(envConfig.port, () => {console.log(`Server is runn
 
 export const socketServer = new Server(httpServer);
 
+
 // abrimos el canal de comunicacion
-const pService=new productService();
+// const pService=new productService();
 let carrito;
 
 socketServer.on('connection',async (socket) => {
   console.log('Nuevo cliente conectado');
-  const productLista=await pService.getAllL();
+  // const productLista=await pService.getAllL();
   // let productos=JSON.stringify(productLista);
   socket.emit('all-products', productLista); 
   socket.on('addProduct', async data => {
     console.log(`lo que regresa de add product es ${data.title}${data.description}${data.price}${data.thumbnail}${data.code}${data.stock}${data.status}${data.id}`);
-    const prodCreado=await pService.save(data.title,data.description,data.price,data.thumbnail,data.code,data.stock,data.status,data.id=0);
-    const updatedProducts = await pService.getAllL(); // Obtener la lista actualizada de productos
+    // const prodCreado=await pService.save(data.title,data.description,data.price,data.thumbnail,data.code,data.stock,data.status,data.id=0);
+    // const updatedProducts = await pService.getAllL(); // Obtener la lista actualizada de productos
     socket.emit('productosupdated', updatedProducts);
   });
   socket.on("deleteProduct", async (id) => {
     // console.log("ID del producto a eliminar:", id);
-    const op=  await pmanager.delete(id);
+    // const op=  await pmanager.delete(id);
     // console.log(`Operacion ${op}`);
-    const updatedProducts = await pmanager.getAllL();
+    // const updatedProducts = await pmanager.getAllL();
     socketServer.emit("productosupdated", updatedProducts);
   });
   socket.on('new-message', async () => {

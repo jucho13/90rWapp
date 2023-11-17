@@ -4,11 +4,11 @@ import { addProductToCart,addProductToCartByApp, createNewCart, deleteCart, getC
 const router = express.Router();
 
 router.get('/api/cart', getCarts);
-router.post('/api/cart', createNewCart);
+router.post('/api/cartpost', createNewCart);
 router.delete('/api/cart/:id', deleteCart);
-router.post('/api/cart/:id/products', addProductToCart);
-router.put('/api/cart/products', addProductToCartByApp);
-router.get('/api/cart/:id/products', getCartbyID);
+router.post('/api/cartp/:id/products', addProductToCart);
+router.put('/api/cart/productsput', addProductToCartByApp);
+router.get('/api/cartget/:id/products', getCartbyID);
 router.delete('/api/cart/:id/products/:id_prod', deleteProductFromCart);
 
 export default router;

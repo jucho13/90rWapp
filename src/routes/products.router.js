@@ -6,9 +6,9 @@ const router = Router();
 router.get('/api/products', getProducts);
 // GET NORMAL PARA PRUEBAS
 router.get('/api/productss', getProductss);
-router.post('/api/products', createProduct);
+router.post('/api/productspost', createProduct);
 router.get('/api/products/:pid', getProductByID);
-router.put('/api/products/:pid', updateProduct);
-router.delete('/api/products/:pid', deleteProductByID);
+router.put('/api/productsput/:pid', updateProduct);
+router.delete('/api/productsdelete/:pid', deleteProductByID);
 
 export default router;

@@ -9,3 +9,13 @@ export const isValidPassword = (user, password) => {
     console.log(`Datos a validar: user-password: ${user.password}, password: ${password}`);
     return bcrypt.compareSync(password, user.password);
 }
+export const swaggerOptions = {
+    definition: {
+        openapi: "3.0.1",
+        info: {
+            title: "Documentacion API Adoptme",
+            description: "Documentacion para uso de swagger"
+        }
+    },
+    apis: [`./src/docs/**/*.yaml`]
+};

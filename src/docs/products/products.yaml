@@ -1,0 +1,175 @@
+paths:
+  /api/products/:
+    get:
+      summary: Obtiene todos los productos de la app paginados
+      tags:
+        - Products
+      responses:
+        "200":
+          description: La operacion fue exitosa!, se renderiza.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/product'
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado del servidor, no se puede manejar el proceso.
+  /api/productss/:
+    get:
+      summary: Obtiene todos los productos de la app
+      tags:
+        - Products
+      responses:
+        "200":
+          description: La operacion fue exitosa!, se renderiza.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/product'
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado del servidor, no se puede manejar el proceso.
+
+
+  /api/productspost:
+    post:
+      summary: Se envia un producto para guardarlo en la api
+      tags:
+        - Products
+      responses:
+        "200":
+          description: La operacion fue exitosa!, puede ingresar al sitio.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/product'
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado del servidor, no se puede manejar el proceso.
+
+
+  /api/products/{pid}:
+    get:
+      summary: Obtiene un producto por id disponible en la aplicación.
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del product se debe ingresar.
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: La operacion fue exitosa!, se retorna un arreglo con los productos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/product'
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado del servidor, no se puede manejar el proceso.
+  /api/productsput/{pid}:
+    put:
+      summary: Obtiene un producto por id y lo actualiza por el body.
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto se debe ingresar.
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: La operacion fue exitosa!, se retorna un arreglo con los productos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/product'
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado del servidor, no se puede manejar el proceso.
+  /api/productsdelete/{pid}:
+    delete:
+      summary: Obtiene un producto por id y lo elimina
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          required: true
+          description: El id del producto se debe ingresar.
+          schema:
+            $type: String
+      responses:
+        "200":
+          description: La operacion fue exitosa!, se retorna un arreglo con los productos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#components/schemas/product'
+        "400":
+          description: Se envió un dato no esperado.
+        "500":
+          description: Error inesperado del servidor, no se puede manejar el proceso.
+
+
+components:
+  schemas:
+    product:
+      type: object
+      properties:
+        _id:
+          type: ObjectId
+          description: Id autogenerado de Mongo.
+        title: 
+          type: String
+          description: Nombre del producto
+        description: 
+          type: String
+          description: Descripcion de la marca y algun dato mas
+        price: 
+          type: Number
+          description: Precio del producto
+        status: 
+          type: Boolean
+          description: Estado del producto
+        thumbnail: 
+          type: Array
+          description: Imagenes del producto
+        code:
+          type: String
+          description: Codigo del producto
+        stock:
+          type: Number
+          description: Stock del Producto
+      example:
+        _id: ObjectId("647fa8c9e46dbc5a20320181")
+        title: Pan
+        ldescription: Bimbo 250g
+        price: 21
+        status: true
+        thumbnail: http://picture.com/picture.jpg
+        code: CA4A21
+        stock: 140
+    
