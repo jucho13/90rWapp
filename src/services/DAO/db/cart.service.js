@@ -1,5 +1,5 @@
 import { cartModel } from "../db/models/cartModel.js";
-import mongoose from "mongoose";
+
 
 export default class cartService {
   constructor() { 

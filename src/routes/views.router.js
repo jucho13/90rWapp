@@ -16,7 +16,7 @@ router.post("/register", passport.authenticate('register', { failureRedirect: '/
     res.redirect("/login");    
 })
 
-router.post("/loginpost", passport.authenticate("login", { failureRedirect: '/fail-login' }), async (req, res) => {
+router.post("/login", passport.authenticate("login", { failureRedirect: '/fail-login' }), async (req, res) => {
     // console.log("User found to login:");
     const user = req.user;
     // console.log(user);

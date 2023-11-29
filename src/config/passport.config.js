@@ -32,7 +32,7 @@ const initializePassport = () => {
                 const user = await userModel.findOne({ email: profile._json.email })
                 // console.log("Usuario encontrado para login:");
                 // console.log(user);
-
+                const newCarts= await CartService.save();
                 if (!user) {
                     // console.warn("User doesn't exists with username: " + profile._json.email);
                     let newUser = {
@@ -41,6 +41,7 @@ const initializePassport = () => {
                         age: 18,
                         email: profile._json.email,
                         password: '',
+                        cart: newCarts._id,    
                         loggedBy: "GitHub"
                     }
                     const result = await userModel.create(newUser)
@@ -63,7 +64,7 @@ const initializePassport = () => {
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             const { first_name, last_name, email, age } = req.body;
-            let newCart= await CartService.save();
+            const newCart= await CartService.save();
             console.log(newCart);
             try {
                 const exists = await userModel.findOne({ email });

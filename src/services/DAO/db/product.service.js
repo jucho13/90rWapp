@@ -31,7 +31,7 @@ export default class productService {
   save = async (product) => {
     // console.log(`en el comienzo de save ${product.code}`);
     let validCode= await this.isThisCodeRepeated(product.code);
-    if (validCode === true)
+    if (validCode === true && product.stock > 0)
     {
       let result = await productModel.create(product);
       // console.log(result);
@@ -39,7 +39,7 @@ export default class productService {
     }
     else
     {
-      return false;
+      return error;
     }
   }
   update = async (id,data) =>{
