@@ -19,9 +19,9 @@ const initializePassport = () => {
     // TODO: Estrategia de Login con GitHub
     passport.use('github', new GitHubStrategy(
         {
-            clientID: process.env.gitHubClientId,
-            clientSecret: process.env.gitHubClientSecret,
-            callbackUrl: process.env.gitHubCallbackUrl
+            clientID: process.env.GITHUBCLIENTID,
+            clientSecret: process.env.GITHUBCLIENTESECRET,
+            callbackUrl: process.env.GITHUBCALLBACKURL
         },
         async (accessToken, refreshToken, profile, done) => {
             // console.log("Profile obtenido del usuario: ");
