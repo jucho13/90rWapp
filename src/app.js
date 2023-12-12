@@ -33,8 +33,6 @@ app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/src/views');
 app.set('view engine', 'handlebars');
 
-// // seteo direccion mongo
-// const MONGO_URL= 'mongodb://127.0.0.1:27017/Ecommerce?retryWrites=true&w=majority';
 
 
 //SESSIONS 
@@ -84,38 +82,38 @@ export const socketServer = new Server(httpServer);
 
 // abrimos el canal de comunicacion
 // const pService=new productService();
-let carrito;
+// let carrito;
 
-socketServer.on('connection',async (socket) => {
-  console.log('Nuevo cliente conectado');
-  // const productLista=await pService.getAllL();
-  // let productos=JSON.stringify(productLista);
-  socket.emit('all-products', productLista); 
-  socket.on('addProduct', async data => {
-    console.log(`lo que regresa de add product es ${data.title}${data.description}${data.price}${data.thumbnail}${data.code}${data.stock}${data.status}${data.id}`);
-    // const prodCreado=await pService.save(data.title,data.description,data.price,data.thumbnail,data.code,data.stock,data.status,data.id=0);
-    // const updatedProducts = await pService.getAllL(); // Obtener la lista actualizada de productos
-    socket.emit('productosupdated', updatedProducts);
-  });
-  socket.on("deleteProduct", async (id) => {
-    // console.log("ID del producto a eliminar:", id);
-    // const op=  await pmanager.delete(id);
-    // console.log(`Operacion ${op}`);
-    // const updatedProducts = await pmanager.getAllL();
-    socketServer.emit("productosupdated", updatedProducts);
-  });
-  socket.on('new-message', async () => {
-    const messages = await chatService.getMessages();
-    socket.emit('messages', messages);
-  });
-  socket.on('solicitudDeCart',async (cartID)=>{
-    carrito=await cartService.getCartbyID(cartID);
-    // console.log(carrito);
-    socket.emit('recibirCart', carrito);
-})
+// socketServer.on('connection',async (socket) => {
+//   console.log('Nuevo cliente conectado');
+//   // const productLista=await pService.getAllL();
+//   // let productos=JSON.stringify(productLista);
+//   socket.emit('all-products', productLista); 
+//   socket.on('addProduct', async data => {
+//     console.log(`lo que regresa de add product es ${data.title}${data.description}${data.price}${data.thumbnail}${data.code}${data.stock}${data.status}${data.id}`);
+//     // const prodCreado=await pService.save(data.title,data.description,data.price,data.thumbnail,data.code,data.stock,data.status,data.id=0);
+//     // const updatedProducts = await pService.getAllL(); // Obtener la lista actualizada de productos
+//     socket.emit('productosupdated', updatedProducts);
+//   });
+//   socket.on("deleteProduct", async (id) => {
+//     // console.log("ID del producto a eliminar:", id);
+//     // const op=  await pmanager.delete(id);
+//     // console.log(`Operacion ${op}`);
+//     // const updatedProducts = await pmanager.getAllL();
+//     socketServer.emit("productosupdated", updatedProducts);
+//   });
+//   socket.on('new-message', async () => {
+//     const messages = await chatService.getMessages();
+//     socket.emit('messages', messages);
+//   });
+//   socket.on('solicitudDeCart',async (cartID)=>{
+//     carrito=await cartService.getCartbyID(cartID);
+//     // console.log(carrito);
+//     socket.emit('recibirCart', carrito);
+// })
   
-  socket.on('disconnect', () => {
-      console.log('Un cliente se ha desconectado');
-  });
-});
+//   socket.on('disconnect', () => {
+//       console.log('Un cliente se ha desconectado');
+//   });
+// });
 
