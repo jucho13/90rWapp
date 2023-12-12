@@ -21,14 +21,9 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 //import managers
 import { cartService, chatService } from "./services/factory.js";
-import dotenv from 'dotenv'; 
-import envConfig from "../src/config/env.config.js";
-
-
 
 const app=express();
-// dotenv.config();
-// console.log(envConfig.port);
+
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(express.static(__dirname+ "/src/public"));
