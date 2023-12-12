@@ -77,7 +77,7 @@ app.use("/github", gitHubRouter);
 app.use("/ticket", ticketRouter);
 app.use("/messages", chatRouter);
 
-const httpServer = app.listen(process.env.PORT || 8080, () => {console.log(`Server is running on port ${envConfig.port}`)});
+const httpServer = app.listen(process.env.PORT || 8080, () => {console.log(`Server is running on port ${process.env.port}`)});
 
 export const socketServer = new Server(httpServer);
 
