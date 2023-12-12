@@ -3,7 +3,6 @@ import passportLocal from 'passport-local';
 import GitHubStrategy from 'passport-github2';
 import userModel from '../services/DAO/db/models/userModel.js';
 import { createHash, isValidPassword } from '../../utils.js';
-import envConfig from './env.config.js';
 import cartService from '../services/DAO/db/cart.service.js';
 
 const CartService= new cartService();
@@ -20,9 +19,9 @@ const initializePassport = () => {
     // TODO: Estrategia de Login con GitHub
     passport.use('github', new GitHubStrategy(
         {
-            clientID: envConfig.gitHubClientId,
-            clientSecret: envConfig.gitHubClientSecret,
-            callbackUrl: envConfig.gitHubCallbackUrl
+            clientID: process.env.gitHubClientId,
+            clientSecret: process.env.gitHubClientSecret,
+            callbackUrl: process.env.gitHubCallbackUrl
         },
         async (accessToken, refreshToken, profile, done) => {
             // console.log("Profile obtenido del usuario: ");
@@ -30,7 +29,7 @@ const initializePassport = () => {
 
             try {
                 const user = await userModel.findOne({ email: profile._json.email })
-                // console.log("Usuario encontrado para login:");
+                // console.log("Usuario encontrado p.ara login:");
                 // console.log(user);
                 const newCarts= await CartService.save();
                 if (!user) {
