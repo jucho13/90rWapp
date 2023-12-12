@@ -22,7 +22,7 @@ import MongoStore from 'connect-mongo';
 //import managers
 import { cartService, chatService } from "./services/factory.js";
 import dotenv from 'dotenv'; 
-import envConfig from "../src/config/env.config.js";6
+import envConfig from "../src/config/env.config.js";
 
 
 
@@ -54,7 +54,7 @@ app.use(session({
 
   // Usando --> connect-mongo
   store: MongoStore.create({
-      mongoUrl: envConfig.mongoUrl,
+      mongoUrl: process.env.MONGO_URL,
       mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
       ttl: 10 * 60
   }),
@@ -82,7 +82,7 @@ app.use("/github", gitHubRouter);
 app.use("/ticket", ticketRouter);
 app.use("/messages", chatRouter);
 
-const httpServer = app.listen(envConfig.port, () => {console.log(`Server is running on port ${envConfig.port}`)});
+const httpServer = app.listen(process.env.PORT || 8080, () => {console.log(`Server is running on port ${envConfig.port}`)});
 
 export const socketServer = new Server(httpServer);
 
