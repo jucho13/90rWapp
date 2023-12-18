@@ -35,12 +35,11 @@ export const deleteCart= async (req, res) => {
 export const addProductToCartByApp = async (req, res) => {
   try {
     // console.log(req.body);
-    const cartId = req.body.cartID;
-    const productID = req.body.productoId;
+    const {cartID, productoID}  = req.body;
 
     // console.log(`Cart ID = ${cartId}`);
     // console.log(`ID PROD ${productID} TO ADD TO CART ${cartId}`)
-    const carritoCompleto = await cartService.update(cartId, productID);
+    const carritoCompleto = await cartService.update(cartID, productoID);
     
     // io.emit('newCart', result);
     return res.status(200).json(carritoCompleto);

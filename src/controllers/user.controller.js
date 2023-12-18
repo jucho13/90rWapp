@@ -1,5 +1,6 @@
 import { Server } from "socket.io";
 import {productService} from "../services/factory.js";
+import jwt from 'jsonwebtoken';
 const socket= new Server();
 
 export const vistaNormal = (req,res)=>{
@@ -29,6 +30,15 @@ export const failLogin = (req, res) => {
 }
 
 export const register = (req, res) => {
+    const user = req.user;
+    // console.log(user);
+    if (!user) return res.status(401).send({ status: "error", error: "credenciales incorrectas" });
+    req.session.user = {
+        name: `${user.first_name} ${user.last_name}`,
+        email: user.email,
+        age: user.age,
+        cart: user.cart
+    }
     res.render('register');
 }
 

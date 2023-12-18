@@ -48,11 +48,12 @@ export default class cartService {
   // };
   update = async (id, idProd) => {
     try {
-      // console.log(`ID CART ${id}`);
-      // console.log(`ID PROD ${idProd}`);
+      console.log(`ID CART ${id}`);
+      console.log(`ID PROD ${idProd}`);
       
       const cart = await cartModel.findOne({ _id: id });
       
+      console.log(cart);
       // Busca el índice del producto en el array 'products' que coincide con idProd
       const productIndex = cart.products.findIndex(product => product.productId === idProd);
       

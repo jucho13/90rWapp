@@ -15,7 +15,9 @@ const schema = new mongoose.Schema({
         type: Array,
         default:[]
     },
-    loggedBy: String 
+    loggedBy: String,
+    userStatus: String,
+    lastConnection: Date
 })
 
 const userModel = mongoose.model(collection, schema);

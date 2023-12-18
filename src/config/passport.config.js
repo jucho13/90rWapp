@@ -1,11 +1,10 @@
 import passport from 'passport';
 import passportLocal from 'passport-local';
-import GitHubStrategy from 'passport-github2';
 import userModel from '../services/DAO/db/models/userModel.js';
 import { createHash, isValidPassword } from '../../utils.js';
-import cartService from '../services/DAO/db/cart.service.js';
+import {cartModel} from '../services/DAO/db/models/cartModel.js';
 
-const CartService= new cartService();
+
 //Declaramos nuestra estrategia:
 const localStrategy = passportLocal.Strategy;
 const initializePassport = () => {
@@ -13,47 +12,6 @@ const initializePassport = () => {
       *  Inicializando la estrategia para github.
       *  Done será nuestro callback
      */
-    /*=============================================
-    =                GitHubStrategy               =
-   =============================================*/
-    // TODO: Estrategia de Login con GitHub
-    passport.use('github', new GitHubStrategy(
-        {
-            clientID: process.env.GITHUBCLIENTID,
-            clientSecret: process.env.GITHUBCLIENTESECRET,
-            callbackUrl: process.env.GITHUBCALLBACKURL
-        },
-        async (accessToken, refreshToken, profile, done) => {
-            // console.log("Profile obtenido del usuario: ");
-            // console.log(profile);
-
-            try {
-                const user = await userModel.findOne({ email: profile._json.email })
-                // console.log("Usuario encontrado p.ara login:");
-                // console.log(user);
-                const newCarts= await CartService.save();
-                if (!user) {
-                    // console.warn("User doesn't exists with username: " + profile._json.email);
-                    let newUser = {
-                        first_name: profile._json.name,
-                        last_name: '',
-                        age: 18,
-                        email: profile._json.email,
-                        password: '',
-                        cart: newCarts._id,    
-                        loggedBy: "GitHub"
-                    }
-                    const result = await userModel.create(newUser)
-                    done(null, result)
-                }
-                else {
-                    return done(null, user)
-                }
-            } catch (error) {
-                return done(error)
-            }
-        }))
-
 
 
     /*=============================================
@@ -62,13 +20,12 @@ const initializePassport = () => {
     //Estrategia de registro de usuario
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
-            const { first_name, last_name, email, age } = req.body;
-            const newCart= await CartService.save();
-            console.log(newCart);
+            const { first_name, last_name, email, age, classUser } = req.body;
+            const newCart= await cartModel.create({});
             try {
                 const exists = await userModel.findOne({ email });
                 if (exists) {
-                    // console.log("El usuario ya existe.");
+                    console.log("El usuario ya existe.");
                     return done(null, false);
                 }
                 const user = {
@@ -78,7 +35,9 @@ const initializePassport = () => {
                     age,
                     password: createHash(password),
                     cart: newCart._id,
-                    loggedBy: "App"
+                    loggedBy: "App",
+                    userStatus: classUser,
+                    lastConnection: null
                 };
                 const result = await userModel.create(user);
                 //Todo sale OK
@@ -95,9 +54,10 @@ const initializePassport = () => {
             try {
                 const user = await userModel.findOne({ email: username });
                 // console.log("Usuario encontrado para login:");
-                console.log(user);
+                let connection= Date.now();    
+                const updateTimeStamp = await userModel.updateOne({ _id: user._id }, { $set: { lastConnection: connection } });
                 if (!user) {
-                    // console.warn("User doesn't exists with username: " + username);
+                    // console.warn("User doesn't5 exists with username: " + username);
                     return done(null, false);
                 }
                 if (!isValidPassword(user, password)) {

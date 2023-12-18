@@ -7,8 +7,6 @@ import cartRouter from "../src/routes/carts.router.js";
 import { __dirname } from "../utils.js";
 import viewRouter from "../src/routes/views.router.js";
 import RTPRouter from "../src/routes/realtimeproducts.router.js";
-import sessionsRouter from '../src/routes/sessions.router.js'
-import gitHubRouter from '../src/routes/gitHub.router.js'
 import ticketRouter from './routes/ticket.router.js'
 import chatRouter from './routes/chat.router.js'
 import handlebars from 'express-handlebars';
@@ -21,6 +19,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 //import managers
 import { cartService, chatService } from "./services/factory.js";
+import cookieParser from "cookie-parser";
 
 const app=express();
 
@@ -46,12 +45,16 @@ app.use(session({
 
 
   // Usando --> connect-mongo
+  // store: MongoStore.create({
+  //     mongoUrl: process.env.MONGO_URL,
+  //     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+  //     ttl: 10 * 60
+  // }),
   store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URL,
-      mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
-      ttl: 10 * 60
+    mongoUrl: "mongodb+srv://juliansolaririveiro:lalala00@cluster0.wwxziry.mongodb.net/?retryWrites=true&w=majority",
+    mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
+    ttl: 10 * 60
   }),
-
 
   secret: "coderS3cr3t",
   resave: true, //guarda en memoria
@@ -64,14 +67,12 @@ app.use(passport.session());
 
 const specs = swaggerJSDoc(swaggerOptions);
 app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
-
+app.use(cookieParser());
 //rutas
 app.use("/",productRouter);
 app.use("/",cartRouter);
 app.use('/', viewRouter);
 app.use('/',RTPRouter);
-app.use('/api/sessions',sessionsRouter);
-app.use("/github", gitHubRouter);
 app.use("/ticket", ticketRouter);
 app.use("/messages", chatRouter);
 

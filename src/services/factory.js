@@ -4,6 +4,8 @@ let chatService;
 let productService;
 let cartService;
 let ticketService;
+let userService;
+
 async function initializeMongoService() {
     console.log("Iniciando servicio para MongoDB");
     try {
@@ -30,6 +32,11 @@ async function initializeMongoService() {
         chatService= new chatServiceMongo();
         console.log("Servicio de chat cargado:");
         console.log(chatService);
+
+        const { default: userServiceMongo } = await import('./DAO/db/user.service.js');
+        userService= new userServiceMongo();
+        console.log("Servicio de users cargado:");
+        console.log(userService);
     
     } catch (error) {
         console.error("Error al iniciar MongoDB:", error);
@@ -40,4 +47,4 @@ async function initializeMongoService() {
 initializeMongoService();
 
 
-export { productService, cartService, ticketService, chatService }
+export { productService, cartService, ticketService, chatService, userService }

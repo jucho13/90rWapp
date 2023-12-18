@@ -1,9 +1,10 @@
-export default class userCartDto {
-    constructor(user) {
-        this.name = user.first_name;
-        this.lastName = user.last_name;
-        this.age = user.age;
-        this.email = user.email;
+export default class UserDTO {
+    static getUserTokenFrom = (user) =>{
+        return {
+            name: `${user.first_name} ${user.last_name}`,
+            userStatus: user.userStatus,
+            cart: user.cart,
+            email:user.email
+        }
     }
-
 }

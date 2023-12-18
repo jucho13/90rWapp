@@ -6,8 +6,6 @@ form.addEventListener('submit', e => {
 
     const obj = {};
     data.forEach((value, key) => obj[key] = value);
-    console.log("Objeto formado:");
-    console.log(obj);
     fetch('/register', {
         method: 'POST',
         body: JSON.stringify(obj),

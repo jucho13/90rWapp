@@ -113,9 +113,9 @@ function updateProductList (productLista) {
 //   updateProductList(products);
 // });
 
-function agregarAlCarrito(idCart, id) {
-  socketCliente.emit('agregarProducto', idCart, id);
-}
+// function agregarAlCarrito(idCart, id) {
+//   socketCliente.emit('agregarProducto', idCart, id);
+// }
 
 function getCookie(name) {
   const cookieString = document.cookie;
@@ -153,14 +153,14 @@ async function obtenerProductos() {
   }
 }
 
-async function agregarProductoAlCarrito(cartID, productoId) {
+async function agregarProductoAlCarrito(cartID, productoID) {
   try {
-    const response = await fetch('/api/cart/products', {
+    const response = await fetch('/api/cart/productsput', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json', // Ajusta los encabezados según tus necesidades
       },
-      body: JSON.stringify({ cartID, productoId }),
+      body: JSON.stringify({cartID, productoID}),
     });
   
     if (response.ok) {
