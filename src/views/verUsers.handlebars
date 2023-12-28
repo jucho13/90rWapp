@@ -1,0 +1,11 @@
+{{#if user}}
+   {{#each user}}
+    <div class="user">
+      <h2>{{this.name}}</h2>
+      <p>{{this.email}}</p>
+      <span>{{this.status}}</span>
+    </div>
+  {{/each}}
+  {{else}}
+    <h2>NO HAY USERS</h2>
+{{/if}}

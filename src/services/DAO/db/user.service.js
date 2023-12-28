@@ -1,3 +1,4 @@
+import UserDTO from "../../DTO/user.dto.js";
 import userModel  from "../db/models/userModel.js";
 
 

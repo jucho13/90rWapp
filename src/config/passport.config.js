@@ -5,6 +5,7 @@ import { createHash, isValidPassword } from '../../utils.js';
 import {cartModel} from '../services/DAO/db/models/cartModel.js';
 
 
+
 //Declaramos nuestra estrategia:
 const localStrategy = passportLocal.Strategy;
 const initializePassport = () => {
@@ -20,7 +21,7 @@ const initializePassport = () => {
     //Estrategia de registro de usuario
     passport.use('register', new localStrategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
-            const { first_name, last_name, email, age, classUser } = req.body;
+            const { first_name, last_name, email, age, status } = req.body;
             const newCart= await cartModel.create({});
             try {
                 const exists = await userModel.findOne({ email });
@@ -36,7 +37,7 @@ const initializePassport = () => {
                     password: createHash(password),
                     cart: newCart._id,
                     loggedBy: "App",
-                    userStatus: classUser,
+                    status,
                     lastConnection: null
                 };
                 const result = await userModel.create(user);

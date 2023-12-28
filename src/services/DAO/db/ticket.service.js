@@ -18,10 +18,8 @@ export default class ticketService {
                 let total = 0;
                 let productsWithNoStock = [];
                 let productsWithStock = [];
-                let productsPostPurchase = [];
                 let productNoAvailable;
                 let productAvailable;
-                let productPostPurchase;
                 for (let i = 0; i < products.length; i++) {
                     let product = await productService.getProductsByID(products[i].productId);
                     // console.log(`ticket product ${product}`);
@@ -32,13 +30,8 @@ export default class ticketService {
                                 notAvailableProduct: product._id,
                                 quantity: products[i].quantity
                             }
-                            //Acá los guardo para compatibilizarlo con el carrito
-                            productPostPurchase = {
-                                product: product._id,
-                                quantity: products[i].quantity
-                            }
+                            
                             productsWithNoStock.push(productNoAvailable);
-                            productsPostPurchase.push(productPostPurchase);
                         } else {
                             //De este producto SI hay Stock
                             productAvailable = {
@@ -62,7 +55,6 @@ export default class ticketService {
                 notAvailableProducts: productsWithNoStock
             };
             const insert = await ticketModel.create(ticket);
-            cartService.update(cartId, productsPostPurchase);
             return '{"status":"success", "message":"Ticket created", "ticketId":"' + insert._id + '"}';
         } else {
             return '{"status":"failed", "message":"Cart not found"}';

@@ -1,12 +1,22 @@
+
 <p>USER:{{user.name}}{{user.lastName}}
 </p>
 <p>USUARIO EMAIL:{{user.email}}</p>
 
-<div id="cart">
+<h2> 
+    CART
+</h2>
 
-</div>
+<p>
+    {{#each product}}
+        <div class="producto">
+            <h2>ID DEL PRODUCTO: {{../productId}}</h2>
+            <span>CANTIDAD: {{../quantity}}</span>
+        </div>
+    {{/each}}
+</p>
 <button id="verTicket">TICKET</button>
 
 
-<script src="/socket.io/socket.io.js"></script>
+
 <script src="/js/cartView.js"></script>

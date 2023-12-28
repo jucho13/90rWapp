@@ -16,7 +16,7 @@ const schema = new mongoose.Schema({
         default:[]
     },
     loggedBy: String,
-    userStatus: String,
+    status: String,
     lastConnection: Date
 })
 

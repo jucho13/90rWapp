@@ -117,7 +117,7 @@ function updateProductList (productLista) {
 //   socketCliente.emit('agregarProducto', idCart, id);
 // }
 
-function getCookie(name) {
+async function getCookie(name) {
   const cookieString = document.cookie;
   console.log(cookieString);
   const cookies = cookieString.split('; ');
@@ -130,8 +130,8 @@ function getCookie(name) {
   return null; // La cookie no fue encontrada
 }
 
-function getCartID() {
-  const id = getCookie('cart');
+async function getCartID() {
+  const id = await getCookie('cart');
   return id;
 }
 
@@ -182,41 +182,75 @@ async function agregarProductoAlCarrito(cartID, productoID) {
   }
 }
 
+// async function inicializar() {
+//   try {
+//     const productos = await obtenerProductos();
+//   if (productos) {
+//     await updateProductList(productos);
+//     const btnsAddProdtoCart = document.querySelectorAll(".btnAddProduct");
+//     console.log(btnsAddProdtoCart);
+
+//     btnsAddProdtoCart.forEach((boton) => {
+//       boton.addEventListener('click', async (evt) => {
+//         const productoId = evt.target.getAttribute('data-product-id'); // Obtén el ID del producto desde el atributo de datos
+//         const cartID = getCartID();
+//         console.log(productoId);
+
+//         if (cartID) {
+//           const cartID2 = cartID.match(/"([^"]+)"/)[1];
+//           console.log(cartID2);
+//           const nuevoProd = await agregarProductoAlCarrito(cartID2, productoId);
+//           console.log(nuevoProd);
+//           alert('Producto agregado');
+//         } else {
+//           console.error('No se pudo obtener el cartID.');
+//         }
+//       });
+//     });
+//   } else {
+//     console.error('No se pudieron obtener los productos.');
+//   }
+// }
+  
+//    catch (error) {
+//     console.log(error);  
+//   }
+// }  
+// inicializar();
 async function inicializar() {
   try {
     const productos = await obtenerProductos();
-  if (productos) {
-    await updateProductList(productos);
-    const btnsAddProdtoCart = document.querySelectorAll(".btnAddProduct");
-    console.log(btnsAddProdtoCart);
+    if (productos) {
+      await updateProductList(productos);
+      const btnsAddProdtoCart = document.querySelectorAll(".btnAddProduct");
+      console.log(btnsAddProdtoCart);
 
-    btnsAddProdtoCart.forEach((boton) => {
-      boton.addEventListener('click', async (evt) => {
-        const productoId = evt.target.getAttribute('data-product-id'); // Obtén el ID del producto desde el atributo de datos
-        const cartID = getCartID();
-        console.log(productoId);
+      btnsAddProdtoCart.forEach((boton) => {
+        boton.addEventListener('click', async (evt) => {
+          const productoId = evt.target.getAttribute('data-product-id'); // Obtén el ID del producto desde el atributo de datos
+          const cartID = await getCartID();
+          console.log(productoId);
 
-        if (cartID) {
-          const cartID2 = cartID.match(/"([^"]+)"/)[1];
-          console.log(cartID2);
-          const nuevoProd = await agregarProductoAlCarrito(cartID2, productoId);
-          console.log(nuevoProd);
-          alert('Producto agregado');
-        } else {
-          console.error('No se pudo obtener el cartID.');
-        }
+          if (cartID && typeof cartID === 'string') {
+            const cartID2 = cartID.match(/"([^"]+)"/);
+            const nuevoProd = await agregarProductoAlCarrito(cartID2 ? cartID2[1] : cartID, productoId);
+            console.log(nuevoProd);
+            alert('Producto agregado');
+          } else {
+            console.error('No se pudo obtener el cartID o no es una cadena válida.');
+          }
+        });
       });
-    });
-  } else {
-    console.error('No se pudieron obtener los productos.');
+    } else {
+      console.error('No se pudieron obtener los productos.');
+    }
+  } catch (error) {
+    console.log(error);
   }
 }
-  
-   catch (error) {
-    console.log(error);  
-  }
-}  
+
 inicializar();
+
 
 
 

@@ -7,6 +7,7 @@ import cartRouter from "../src/routes/carts.router.js";
 import { __dirname } from "../utils.js";
 import viewRouter from "../src/routes/views.router.js";
 import RTPRouter from "../src/routes/realtimeproducts.router.js";
+import userRouter from '../src/routes/user.router.js'
 import ticketRouter from './routes/ticket.router.js'
 import chatRouter from './routes/chat.router.js'
 import handlebars from 'express-handlebars';
@@ -20,6 +21,7 @@ import MongoStore from 'connect-mongo';
 //import managers
 import { cartService, chatService } from "./services/factory.js";
 import cookieParser from "cookie-parser";
+import cors from 'cors';
 
 const app=express();
 
@@ -31,7 +33,8 @@ app.use(express.static(__dirname+ "/src/public"));
 app.engine('handlebars', handlebars.engine());
 app.set('views', __dirname + '/src/views');
 app.set('view engine', 'handlebars');
-
+app.use(cors());
+app.use(cookieParser());
 
 
 //SESSIONS 
@@ -61,14 +64,15 @@ app.use(session({
   saveUninitialized: true, //lo guarda a penas se crea
 }));
 
+
 initializePassport();
 app.use(passport.initialize());
 app.use(passport.session());
 
 const specs = swaggerJSDoc(swaggerOptions);
 app.use('/apidocs', swaggerUIExpress.serve, swaggerUIExpress.setup(specs));
-app.use(cookieParser());
 //rutas
+app.use("/", userRouter);
 app.use("/",productRouter);
 app.use("/",cartRouter);
 app.use('/', viewRouter);

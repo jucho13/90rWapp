@@ -1,6 +1,9 @@
 import { Server } from "socket.io";
-import {productService} from "../services/factory.js";
-import jwt from 'jsonwebtoken';
+import {cartService, productService, userService} from "../services/factory.js";
+import userModel from "../services/DAO/db/models/userModel.js";
+import jwt  from "jsonwebtoken";
+import UserDTO from "../services/DTO/user.dto.js";
+import { isValidPassword, createHash } from "../../utils.js";
 const socket= new Server();
 
 export const vistaNormal = (req,res)=>{
@@ -16,7 +19,72 @@ export const sessionManagement = (req, res) => {
         res.send("Bienvenido!");
     }
 }
+export const registerPost = async (req, res) => {
+    const { first_name, last_name, email, age, status, password } = req.body;
+    const newCart = await cartService.save({});
+    let connection= Date.now();    
+    try {
+        const exists = await userModel.findOne({ email });
 
+        if (exists) {
+            console.log("El usuario ya existe.");
+            res.status(400).send("El usuario ya existe."); // Enviar un código de estado 400 (Bad Request) si el usuario ya existe
+            return;
+        }
+
+        const user = {
+            first_name,
+            last_name,
+            email,
+            age,
+            password: createHash(password),
+            cart: newCart._id,
+            loggedBy: "App",
+            status,
+            lastConnection: connection
+        };
+
+        const result = await userService.save(user);
+        res.status(201).send("Usuario registrado exitosamente"); // Enviar un código de estado 201 (Created) y un mensaje
+    } catch (error) {
+        console.log(error);
+        res.status(500).send("Error interno del servidor"); // Enviar un código de estado 500 (Internal Server Error) en caso de error interno
+    }
+};
+
+
+export const loginPost = async (req,res) =>{
+    const user = req.body;
+    console.log(user);
+    if (!user){
+        res.status(401).send({ status: "error", error: "credenciales incorrectas" });
+    } 
+    const userp = await userModel.findOne({ email: user.email });
+    console.log(userp);
+    if (!userp){
+        res.status(401).send({ status: "error", error: "credenciales incorrectas" });
+    }
+    else{
+        req.session.user = {
+            name: `${userp.first_name} ${userp.last_name}`,
+            email: userp.email,
+            age: userp.age,
+            cart: userp.cart._id
+        }
+        // console.log("Usuario encontrado para login:");
+        let connection= Date.now();    
+        const updateTimeStamp = await userModel.updateOne({ _id: userp._id }, { $set: { lastConnection: connection } });
+        if (!isValidPassword(userp, user.password))
+        {
+            res.status(400).send({status: 'error', message: 'contraseña invalida'})
+        }
+        const userDto = UserDTO.getUserTokenFrom(userp);
+        console.log(userDto);
+        const token = jwt.sign(userDto,/*process.env.JWT_TOKEN*/'tokenSecretJWT',{expiresIn:"1h"});
+        res.cookie('jwt', token, { maxAge: 3600000 });
+        res.status(200).json({ message: "Inicio de sesión exitoso", user });
+    } 
+}
 export const login = (req, res) => {
     res.render('login');
 }
@@ -30,22 +98,17 @@ export const failLogin = (req, res) => {
 }
 
 export const register = (req, res) => {
-    const user = req.user;
-    // console.log(user);
-    if (!user) return res.status(401).send({ status: "error", error: "credenciales incorrectas" });
-    req.session.user = {
-        name: `${user.first_name} ${user.last_name}`,
-        email: user.email,
-        age: user.age,
-        cart: user.cart
-    }
+    
     res.render('register');
 }
 
 export const profile = async (req, res) => {
     try{
-    const cartID= req.session.user.cart;
-    const products= await productService.getAllL();
+    const cookie = req.cookies['jwt'];
+    const decoded = jwt.verify(cookie, /*process.env.JWT_TOKEN*/'tokenSecretJWT');
+    console.log(decoded);
+    const cartID= decoded.cart;
+    console.log(cartID);
     res.cookie('cart', cartID, {maxage: 3000000});
     res.render('index', {user:req.session.user});
 }
@@ -59,6 +122,16 @@ export const profile = async (req, res) => {
 export const privateMood = (req, res) => {
     res.render('private');
 };
+export const verUsers = async (req,res) => {
+    const users = await userService.getAll();
+    // console.log(users);
+    let usersDTO=[];
+    users.forEach(user => {
+        const userdto= UserDTO.getUserTokenFrom(user);
+        usersDTO.push(userdto);
+    });
+    res.render('verUsers',{ user: usersDTO });
+}
 
 export const logOut = (req, res) => {
     req.session.destroy(error => {
