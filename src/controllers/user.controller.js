@@ -117,20 +117,49 @@ export const profile = async (req, res) => {
     }
 }
 
-//private
 
-export const privateMood = (req, res) => {
-    res.render('private');
-};
 export const verUsers = async (req,res) => {
     const users = await userService.getAll();
-    // console.log(users);
+    console.log(users);
     let usersDTO=[];
     users.forEach(user => {
         const userdto= UserDTO.getUserTokenFrom(user);
         usersDTO.push(userdto);
     });
     res.render('verUsers',{ user: usersDTO });
+}
+export const deleteTimedOutUsers = async (req, res) => {
+    const timeout = 86400 * 1;//cambiar a dos, por los dos dias
+    const users = await userService.getAll();
+    const now = new Date();
+    const nowInSeconds = now.getTime() / 1000;
+    let deletedUsers = 0;
+    for (const user in users) {
+        const userDate = new Date(users[user].lastConnection);
+        const userDateInSeconds = userDate.getTime() / 1000;
+        const diff = nowInSeconds - userDateInSeconds;
+        if (diff >= timeout) {
+            await userService.delete(users[user]._id);
+            deletedUsers++;
+            const emailBody = {
+                to: users[user].email,
+                subject: "Cuenta eliminada",                
+                html: "<h1>Hola " + users[user].first_name + "</h1><br/><h2>Tu cuenta ha sido eliminada por inactividad</h2><br/><p>Si lo deseas, puedes volver a registrarse en cualquier momento</p>"
+            }
+            try {
+                fetch("http://localhost:8080/mail/send", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(emailBody)
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
+    res.status(200).send('{"status": "ok", "message": "User cleanup executed", "deletedUsers": ' + deletedUsers + '}');
 }
 
 export const logOut = (req, res) => {
@@ -140,4 +169,14 @@ export const logOut = (req, res) => {
         }
         res.send("Sesion cerrada correctamente.");
     });
+}
+
+export const vistaUnicaAdminUsers = async (req,res)=>{
+    const users = await userService.getAll();
+    let usersDTO=[];
+    users.forEach(user => {
+        const userdto= UserDTO.getUserTokenFrom(user);
+        usersDTO.push(userdto);
+    });
+    res.render('vistaAdminUsers', {user: usersDTO});
 }

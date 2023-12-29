@@ -44,10 +44,16 @@ const ticketController = async (req, res) => {
 //     res.redirect("/ticket/vistas");
 // }
 const verCarritoController = async (req, res) => {
-    const user= req.session.user;
+    const user = req.session.user;
     const cart = req.cookies['cart'];
-    const cartProds= await cartService.getCartbyID(cart);
-    res.render('cartView' ,{user: user, product: cartProds.products});
+    const cartUser = await cartService.getCartbyID(cart);
+    const cartProds = cartUser.products.map(product => ({
+        productId: product.productId,
+        quantity: product.quantity
+    }));
+    console.log(cartProds);
+    res.render('cartView', { user, product: cartProds });
 }
+
 
 export { ticketController, verCarritoController}

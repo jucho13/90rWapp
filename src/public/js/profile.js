@@ -116,7 +116,7 @@ function updateProductList (productLista) {
 // function agregarAlCarrito(idCart, id) {
 //   socketCliente.emit('agregarProducto', idCart, id);
 // }
-
+const btnUsers= document.getElementById("btnUsers");
 async function getCookie(name) {
   const cookieString = document.cookie;
   console.log(cookieString);
@@ -134,7 +134,9 @@ async function getCartID() {
   const id = await getCookie('cart');
   return id;
 }
-
+btnUsers.addEventListener('click', async () => {
+  await fetchGetUsers();
+})
 async function obtenerProductos() {
   try {
     const response = await fetch('/api/productss', {
@@ -181,7 +183,25 @@ async function agregarProductoAlCarrito(cartID, productoID) {
     console.log(error);
   }
 }
+async function fetchGetUsers() {
+  try {
+    const response = await fetch('/api/users', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json', // Ajusta los encabezados según tus necesidades
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+    }
 
+    // Si la respuesta es exitosa, redirige a la nueva ubicación
+    window.location.href = '/api/users';
+  }
+  catch(error){
+    console.log(error);
+  }
+}
 // async function inicializar() {
 //   try {
 //     const productos = await obtenerProductos();

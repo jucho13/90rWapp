@@ -1,11 +1,16 @@
+<button id="clearUsers">ELIMINAR USERS CON INACTIVIDAD DE DOS DIAS</button>
+<button id="refreshPage">REFRESCAR USUARIOS ACTIVOS</button>
 {{#if user}}
    {{#each user}}
     <div class="user">
       <h2>{{this.name}}</h2>
       <p>{{this.email}}</p>
-      <span>{{this.status}}</span>
+      <p>{{this.userStatus}}</p>
     </div>
   {{/each}}
   {{else}}
     <h2>NO HAY USERS</h2>
 {{/if}}
+<button id="refreshPage">REFRESCAR USUARIOS ACTIVOS</button>
+<button id="clearUsers">ELIMINAR USERS CON INACTIVIDAD DE DOS DIAS</button>
+<script src="/js/verUsers.js"></script>

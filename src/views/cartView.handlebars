@@ -7,14 +7,17 @@
     CART
 </h2>
 
-<p>
-    {{#each product}}
-        <div class="producto">
-            <h2>ID DEL PRODUCTO: {{../productId}}</h2>
-            <span>CANTIDAD: {{../quantity}}</span>
-        </div>
-    {{/each}}
-</p>
+
+{{#if product}}
+{{#each product}}
+    <h2>ID DEL PRODUCTO: {{this.productId}}</h2>
+    <p>CANTIDAD: {{this.quantity}}</p>
+{{/each}}
+{{else}}
+    <h2>NO HAY PRODUCTOS EN TU CARRITO</h2>    
+{{/if}}
+    
+
 <button id="verTicket">TICKET</button>
 
 
