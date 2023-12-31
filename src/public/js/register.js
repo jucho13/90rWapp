@@ -16,7 +16,6 @@ form.addEventListener('submit', e => {
         if (result.status === 201) {
             // Realizar algún trabajo adicional si es necesario
             // ...
-
             // Redirigir a la página de inicio de sesión después del trabajo adicional
             window.location.replace('/login');
         } else if (result.status === 400) {
