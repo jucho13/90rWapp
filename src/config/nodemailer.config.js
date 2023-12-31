@@ -2,7 +2,7 @@ export const mailSettings = {
     service: 'gmail',
     port: 587,
     auth: {
-        user: 'juliansolaririveiro@gmail.com',
-        pass: 'xrzt kmqr tjaj umvu'
+        user: process.env.GMAIL_ACCOUNT,
+        pass: process.env.PASS_GMAIL
     }
 }
