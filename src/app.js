@@ -54,7 +54,7 @@ app.use(session({
   //     ttl: 10 * 60
   // }),
   store: MongoStore.create({
-    mongoUrl: "mongodb+srv://juliansolaririveiro:lalala00@cluster0.wwxziry.mongodb.net/?retryWrites=true&w=majority",
+    mongoUrl: process.env.MONGO_URL,
     mongoOptions: { useNewUrlParser: true, useUnifiedTopology: true },
     ttl: 10 * 60
   }),

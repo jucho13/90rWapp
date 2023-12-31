@@ -79,8 +79,8 @@ export const loginPost = async (req,res) =>{
             res.status(400).send({status: 'error', message: 'contraseña invalida'})
         }
         const userDto = UserDTO.getUserTokenFrom(userp);
-        console.log(userDto);
-        const token = jwt.sign(userDto,/*process.env.JWT_TOKEN*/'tokenSecretJWT',{expiresIn:"1h"});
+        // console.log(userDto);
+        const token = jwt.sign(userDto,process.env.JWT_TOKEN,{expiresIn:"1h"});
         res.cookie('jwt', token, { maxAge: 3600000 });
         res.status(200).json({ message: "Inicio de sesión exitoso", user });
     } 
@@ -105,7 +105,7 @@ export const register = (req, res) => {
 export const profile = async (req, res) => {
     try{
     const cookie = req.cookies['jwt'];
-    const decoded = jwt.verify(cookie, /*process.env.JWT_TOKEN*/'tokenSecretJWT');
+    const decoded = jwt.verify(cookie, process.env.JWT_TOKEN);
     console.log(decoded);
     const cartID= decoded.cart;
     console.log(cartID);
@@ -147,7 +147,7 @@ export const deleteTimedOutUsers = async (req, res) => {
                 html: "<h1>Hola " + users[user].first_name + "</h1><br/><h2>Tu cuenta ha sido eliminada por inactividad</h2><br/><p>Si lo deseas, puedes volver a registrarse en cualquier momento</p>"
             }
             try {
-                fetch("http://localhost" + process.env.PORT + "/mail/send", {
+                fetch(process.env.PATHAPI + "/mail/send", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json"
