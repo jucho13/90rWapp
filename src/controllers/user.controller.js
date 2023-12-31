@@ -129,7 +129,7 @@ export const verUsers = async (req,res) => {
     res.render('verUsers',{ user: usersDTO });
 }
 export const deleteTimedOutUsers = async (req, res) => {
-    const timeout = 86400 * 1;//cambiar a dos, por los dos dias
+    const timeout = 86400 * 2;
     const users = await userService.getAll();
     const now = new Date();
     const nowInSeconds = now.getTime() / 1000;

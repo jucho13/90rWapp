@@ -1,6 +1,0 @@
-
-jwt firma en login y probablemente en profile en user.controller.js// JWT_TOKEN='tokenSecretJWT'
-en user controller cambiar el localhost:8080 en el mailing por process.env.PATHAPI=
-
-process.env.GMAIL_ACCOUNT='juliansolaririveiro@gmail.com'
-process.env.PASS_GMAIL='xrzt kmqr tjaj umvu'
