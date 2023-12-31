@@ -1,5 +1,4 @@
-import {productService} from "../services/factory.js";
-// const manager= new productService();
+import {cartService, productService,userService} from "../services/factory.js";
 // import { Server } from "socket.io";
 
 // const socket = new Server();
@@ -84,7 +83,7 @@ export const createProduct = async (req, res) => {
 export const getProductByID = async (req, res) => {
     const {pid} = req.params;
     // console.log(`pid: ${pid}`);
-    const product = await productService.getProductsbyID(pid);
+    const product = await productService.getProductsByID(pid);
     if(product) {
       res.send({status: "success", payload: product });
     }else {
@@ -107,10 +106,45 @@ export const updateProduct = async (req, res) => {
 export const deleteProductByID =async (req, res) => {
     const {pid} = req.params;
     let p = await productService.delete(pid);
+    if (p){
+      const users = await userService.getAll();
+      console.log(users); 
+      for (const element of users) {
+        const user = await userService.getPremiumUsers(element);
+        if (user === true) {
+          const userCart= await cartService.getCartbyID(element.cart);
+          console.log(`USER CART ${userCart}`);
+          userCart.products.forEach(product => {
+            if(product.productId === pid){
+              const emailBody = {
+                to: element.email,
+                subject: "Producto eliminado",                
+                html: "<h1>Hola " + element.first_name + "</h1><br/><h2>Se ha eliminado un producto que estaba en tu carrito, nos vemos proximamente</h2>"
+              }
+            try {
+              fetch("http://localhost:" + process.env.PORT + "/mail/send", {
+                  method: "POST",
+                  headers: {
+                      "Content-Type": "application/json"
+                  },
+                  body: JSON.stringify(emailBody)
+              });
+            } catch (error) {
+              console.log(error);
+            }
+          }
+            
+        });
+        }
+      }
+    } 
+    
     // socket.emit('change');
-    if(p) {
-      res.send({status: "success", payload: p });
-    }else {
+  if(p) {
+    res.send({status: "success", payload: p });
+  }else {
       res.status(404).json({'error': 'Producto no encontrado'});
     }
 }
+
+

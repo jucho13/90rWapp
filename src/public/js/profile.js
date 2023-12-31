@@ -117,6 +117,7 @@ function updateProductList (productLista) {
 //   socketCliente.emit('agregarProducto', idCart, id);
 // }
 const btnUsers= document.getElementById("btnUsers");
+const btnAdmin= document.getElementById("btnAdmin");
 async function getCookie(name) {
   const cookieString = document.cookie;
   console.log(cookieString);
@@ -129,6 +130,10 @@ async function getCookie(name) {
   }
   return null; // La cookie no fue encontrada
 }
+
+btnAdmin.addEventListener('click', async () =>{
+  await fetGetAdminView();
+})
 
 async function getCartID() {
   const id = await getCookie('cart');
@@ -202,6 +207,26 @@ async function fetchGetUsers() {
     console.log(error);
   }
 }
+async function fetGetAdminView () {
+  try {
+    const response = await fetch('/api/users/admin', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json', // Ajusta los encabezados según tus necesidades
+      },
+    });
+    if (!response.ok) {
+      throw new Error(`Error en la solicitud: ${response.status} ${response.statusText}`);
+    }
+
+    // Si la respuesta es exitosa, redirige a la nueva ubicación
+    window.location.href = '/api/users/admin';
+  }
+  catch(error){
+    console.log(error);
+  }
+}
+
 // async function inicializar() {
 //   try {
 //     const productos = await obtenerProductos();

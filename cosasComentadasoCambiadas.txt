@@ -3,7 +3,3 @@ mongo URL en db.js
 jwt firma en login y probablemente en profile en user.controller.js
 en user controller cambiar el localhost:8080 en el mailing por process.env.PATHAPI
 
-fijarse porque cuando hago la conexion con github no me renderiza el cart en la cookie
-
-seguir con las rutas que me piden en el proyecto final y 
-incorporar jwt

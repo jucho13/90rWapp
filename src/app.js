@@ -8,18 +8,18 @@ import { __dirname } from "../utils.js";
 import viewRouter from "../src/routes/views.router.js";
 import RTPRouter from "../src/routes/realtimeproducts.router.js";
 import userRouter from '../src/routes/user.router.js'
+import mailRouter from '../src/routes/mail.router.js'
 import ticketRouter from './routes/ticket.router.js'
 import chatRouter from './routes/chat.router.js'
 import handlebars from 'express-handlebars';
 import { Server } from "socket.io";
 import passport from 'passport';
 import initializePassport from '../src/config/passport.config.js';
-import productService from '../src/services/DAO/db/product.service.js'
 // dependencias para las sessions
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 //import managers
-import { cartService, chatService } from "./services/factory.js";
+import { cartService, chatService, productService } from "./services/factory.js";
 import cookieParser from "cookie-parser";
 import cors from 'cors';
 
@@ -79,6 +79,7 @@ app.use('/', viewRouter);
 app.use('/',RTPRouter);
 app.use("/ticket", ticketRouter);
 app.use("/messages", chatRouter);
+app.use("/mail/send", mailRouter);
 
 const httpServer = app.listen(process.env.PORT || 8080, () => {console.log(`Server is running on port ${process.env.port}`)});
 
@@ -89,7 +90,7 @@ export const socketServer = new Server(httpServer);
 // const pService=new productService();
 // let carrito;
 
-// socketServer.on('connection',async (socket) => {
+socketServer.on('connection',async (socket) => {
 //   console.log('Nuevo cliente conectado');
 //   // const productLista=await pService.getAllL();
 //   // let productos=JSON.stringify(productLista);
@@ -107,18 +108,18 @@ export const socketServer = new Server(httpServer);
 //     // const updatedProducts = await pmanager.getAllL();
 //     socketServer.emit("productosupdated", updatedProducts);
 //   });
-//   socket.on('new-message', async () => {
-//     const messages = await chatService.getMessages();
-//     socket.emit('messages', messages);
-//   });
+  socket.on('new-message', async () => {
+    const messages = await chatService.getMessages();
+    socket.emit('messages', messages);
+  });
 //   socket.on('solicitudDeCart',async (cartID)=>{
 //     carrito=await cartService.getCartbyID(cartID);
 //     // console.log(carrito);
 //     socket.emit('recibirCart', carrito);
 // })
   
-//   socket.on('disconnect', () => {
-//       console.log('Un cliente se ha desconectado');
-//   });
-// });
+  socket.on('disconnect', () => {
+      console.log('Un cliente se ha desconectado');
+  });
+});
 

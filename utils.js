@@ -34,7 +34,7 @@ export  async function authUser(req, res, next) {
 }
 //private
 export async function authAdmin(req, res, next) {
-    if (req.session.user.email === 'adminCoder@coder.com' && req.session.user.admin) {
+    if (req.session.user.email === 'adminCoder@coder.com') {
         return next();
     } else {
         return res.status(403).send('Usuario no autorizado para ingresar a este recurso..')
