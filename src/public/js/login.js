@@ -6,7 +6,7 @@ form.addEventListener('submit', e => {
     const obj = {};
     data.forEach((value, key) => obj[key] = value);
 
-    fetch(`${process.env.PATHAPI}/login`, {
+    fetch('/login', {
         method: 'POST',
         body: JSON.stringify(obj),
         headers: {
@@ -14,19 +14,23 @@ form.addEventListener('submit', e => {
         }
     })
     .then(async result => {
-        if (result.status === 201) {
-            // Realizar algún trabajo adicional si es necesario
-            // ...
-            // Redirigir a la página de inicio de sesión después del trabajo adicional
+        console.log(result.status);
+        const response = await result.json(); // Parsear el cuerpo de la respuesta JSON
+
+        if (result.status === 200) {
+            // Autenticación exitosa
+            console.log(response.message); // Mensaje del servidor
             window.location.replace('/profile');
-        } else if (result.status === 400) {
-            // Manejar el caso de usuario ya existente
-            console.log(await result.text()); // Mostrar el mensaje del servidor
+        } else if (result.status === 401) {
+            // Credenciales inválidas
+            console.log(response.message); // Mensaje del servidor
         } else {
             // Manejar otros códigos de estado si es necesario
             console.log(`Error en el servidor: ${result.status}`);
         }
-    }).catch(error => {
+    })
+    .catch(error => {
+        // Manejo de errores generales de la solicitud fetch
         console.error('Error en la solicitud fetch:', error);
     });
 });
