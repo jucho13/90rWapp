@@ -9,7 +9,6 @@ const schema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    age: Number,
     password: String,//Se deja plano por el momento.
     cart:{
         type: Array,
@@ -17,6 +16,7 @@ const schema = new mongoose.Schema({
     },
     loggedBy: String,
     status: String,
+    cell: Number,
     lastConnection: Date
 })
 

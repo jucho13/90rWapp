@@ -2,6 +2,7 @@ import {dirname} from "path";
 import { fileURLToPath } from "url";
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { stringify } from "querystring";
 
 export const __dirname=dirname(fileURLToPath(import.meta.url));
 //Crypto functions
@@ -40,3 +41,16 @@ export async function authAdmin(req, res, next) {
         return res.status(403).send('Usuario no autorizado para ingresar a este recurso..')
     }
 }
+
+export async function validatePhoneNumber(numero) {
+    const cleanedNumber = numero.split('@')[0];
+
+    // Regex que valida que el número contenga solo dígitos
+    const phoneRegex = /^\d+$/;
+    const check=phoneRegex.test(cleanedNumber)
+    if (check === true)
+    {
+        return  cleanedNumber;
+    }
+}
+
