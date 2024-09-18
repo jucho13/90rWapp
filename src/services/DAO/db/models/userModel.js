@@ -9,14 +9,14 @@ const schema = new mongoose.Schema({
         type: String,
         unique: true
     },
-    password: String,//Se deja plano por el momento.
+    password: String,
     cart:{
         type: Array,
         default:[]
     },
     loggedBy: String,
     status: String,
-    cell: Number,
+    cel: Number,
     lastConnection: Date
 })
 

@@ -5,6 +5,7 @@ let productService;
 let cartService;
 let ticketService;
 let userService;
+let whatsappService;
 
 async function initializeMongoService() {
     console.log("Iniciando servicio para MongoDB");
@@ -37,7 +38,11 @@ async function initializeMongoService() {
         userService= new userServiceMongo();
         console.log("Servicio de users cargado:");
         console.log(userService);
-    
+ 
+        const { default: whatsappServiceMongo } = await import('./DAO/db/whatsapp.service.js');
+        whatsappService= new whatsappServiceMongo();
+        console.log("Servicio de whatsapp cargado:");
+        console.log(whatsappService);
     } catch (error) {
         console.error("Error al iniciar MongoDB:", error);
         process.exit(1); // Salir con código de error
@@ -47,4 +52,4 @@ async function initializeMongoService() {
 initializeMongoService();
 
 
-export { productService, cartService, ticketService, chatService, userService }
+export { productService, cartService, ticketService, chatService, userService, whatsappService }

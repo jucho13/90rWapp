@@ -52,5 +52,20 @@ export async function validatePhoneNumber(numero) {
     {
         return  cleanedNumber;
     }
-}
 
+}
+export async function validateOneDayConnection(date) {
+    const dateNow = Date.now();
+    const oneDayInMilliseconds = 24 * 60 * 60 * 1000;
+
+    // Calcula la diferencia entre la fecha actual y la fecha pasada como parámetro
+    const difference = dateNow - new Date(date).getTime();
+    console.log(difference);
+    
+    // Verifica si ha pasado un día
+    if (difference >= oneDayInMilliseconds) {
+        return true; // Ha pasado más de un día
+    } else {
+        return false; // No ha pasado un día
+    }
+}
