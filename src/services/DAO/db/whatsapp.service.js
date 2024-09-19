@@ -19,9 +19,11 @@ export default class whatsappService {
     getLastConnection = async (cel) => {
         let user= await userModel.findOne({ cel: cel });
         console.log(user);
-        
+        return user.lastConnection;
     }
     updateConnection = async (cel,connection) => {
+        console.log(connection);
+        
         let updates = await userModel.updateOne({ cel: cel }, { $set: { lastConnection: connection } });
         return updates;
     }

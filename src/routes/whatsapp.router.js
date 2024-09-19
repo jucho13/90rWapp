@@ -1,7 +1,7 @@
 import { Router } from "express";
 import pkg from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
-import { validatePhoneNumber, validateOneDayConnection } from "../../utils.js";
+import { validatePhoneNumber, validateMoreThanOneHourConnection } from "../../utils.js";
 import {whatsappService} from "../services/factory.js";
 
 const { Client, LocalAuth} = pkg;
@@ -36,107 +36,48 @@ client.on('message_create', async message => {
         let mensaje;
         switch (response) {
             case 1:
-                numeroDestino = // El número de destino es el que te envió el mensaje
-                console.log(numeroDestino);
                 if (!numeroVirgen.isArchived)
                 {
-                    await client.archiveChat(message._data.from);
+                    await client.archiveChat(numeroVirgen);
                 }
                 mensaje = "Donde se encuentra nuestro numero de telefono, puede acceder al catalogo y agregar productos a su pedido.\n\nEn el caso de aun no poder puede guiarse con este video: https://youtu.be/MPyotKqxvIc?si=yfdYUK6pCDAGYuAH";
-                try {
-                    const response = await fetch('http://localhost:8081/api/whatsapp/send', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ numeroDestino, mensaje })
-                    });
-            
-                    if (response.ok) {
-                        return 'Mensaje informativo enviado.';  // Puedes devolver el mensaje o lo que prefieras
-                    } else {
-                        const errorMessage = await response.text(); // Captura el cuerpo de la respuesta en caso de error
-                        console.error(`Error al enviar el mensaje: ${errorMessage}`);
-                        return `Error al enviar el mensaje: ${errorMessage}`;
-                    }
-        
-                } catch (error) {
-                    console.error('Error en el fetch:', error);
-                    return `Error en el fetch: ${error.message}`;
-                }
+                await sendMessages(mensaje,numeroDestino);
             case 2:
                 if (!numeroVirgen.isArchived)
                 {
-                    await client.archiveChat(message._data.from);
+                    await client.archiveChat(numeroVirgen);
                 }
                 console.log("Respuesta Negativa");
                 break;
             case 3:
                 if (numeroVirgen.isArchived)
                 {
-                    await client.unarchiveChat(message._data.from);
+                    await client.unarchiveChat(numeroVirgen);
                 }    
                 mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
-                try {
-                    const response = await fetch('http://localhost:8081/api/whatsapp/send', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ numeroDestino, mensaje })
-                    });
-            
-                    if (response.ok) {
-                        return 'Mensaje informativo enviado.';  // Puedes devolver el mensaje o lo que prefieras
-                    } else {
-                        const errorMessage = await response.text(); // Captura el cuerpo de la respuesta en caso de error
-                        console.error(`Error al enviar el mensaje: ${errorMessage}`);
-                        return `Error al enviar el mensaje: ${errorMessage}`;
-                    }
-        
-                } catch (error) {
-                    console.error('Error en el fetch:', error);
-                    return `Error en el fetch: ${error.message}`;
-                }
+                await sendMessages(mensaje, numeroDestino);
             default:
                 if (!numeroVirgen.isArchived)
                 {
-                    await client.archiveChat(message._data.from);
+                    await client.archiveChat(numeroVirgen);
                 }
-                const connection=await whatsappService.getLastConnection(numeroDestino);
-                if (await validateOneDayConnection(connection)){
-                    await whatsappService.updateConnection(numeroDestino,connection);
-                    mensaje = 'Bienvenido a 90R! 🥕🥔\n\nGracias por contactarnos! Nos enorgullece ofrecerte los mejores precios en productos frescos  🍉🍇\n\n¿Cómo te podemos ayudar? Por favor, elige una de las siguientes opciones:\n\n✅ Compra: Escribe 1 para conocer el proceso de compra\n✅ Pedidos: Escribe 2 para revisar tus pedidos\n✅ Contacto: Escribe 3 para hablar con nosotros';
-                    try {
-                        const response = await fetch('http://localhost:8081/api/whatsapp/send', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                         body: JSON.stringify({ numeroDestino, mensaje })
-                        });
-            
-                        if (response.ok) {
-                         return 'Mensaje informativo enviado.';  // Puedes devolver el mensaje o lo que prefieras
-                        } else {
-                         const errorMessage = await response.text(); // Captura el cuerpo de la respuesta en caso de error
-                         console.error(`Error al enviar el mensaje: ${errorMessage}`);
-                         return `Error al enviar el mensaje: ${errorMessage}`;
-                     }
-        
-                    } catch (error) {
-                        console.error('Error en el fetch:', error);
-                        return `Error en el fetch: ${error.message}`;
+                const connection=await whatsappService.getLastConnection(numeroDestino); // obtiene la ultima consulta del usuario
+                console.log(`Resultado de getLastConnection ${connection}`);
+                
+                if (await validateMoreThanOneHourConnection(connection)){ // Valida que haya pasado mas de una hora de su ultima consulta
+                    const newConnection= Date.now();
+                    await whatsappService.updateConnection(numeroDestino,newConnection); // actualiza su ultima conexion
+                    mensaje = 'Bienvenido a 90R! 🥕🥔\n\nGracias por contactarnos! Nos enorgullece ofrecerte los mejores precios en productos frescos en Mar del Plata  🍉🍇\n\n¿Cómo te podemos ayudar? Por favor, elige una de las siguientes opciones:\n\n✅ Compra: Escribe 1 para conocer el proceso de compra\n✅ Pedidos: Escribe 2 para revisar tus pedidos\n✅ Contacto: Escribe 3 para hablar con nosotros';
+                    await sendMessages(mensaje, numeroDestino);
+                }else{ // si paso menos de una hora de su ultima consulta
+                    if (numeroVirgen.isArchived) // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
+                    {
+                        await client.unarchiveChat(numeroVirgen);
+                        mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
+                        await sendMessages(mensaje, numeroDestino);
                     }
-                  
-                }else{
-                    if (await whatsappService.getByNumber(numeroDestino)){
-                        return;
-                    }
-                    else {
                         
-                    }
-
+                    
                 }
                     
         }
@@ -161,6 +102,30 @@ router.post('/send', async (req, res) => {
         res.status(500).json({ error: 'Error al enviar mensaje' });
     }
 });
+
+async function sendMessages(mensaje,numeroDestino){
+    try {
+        const response = await fetch('http://localhost:8081/api/whatsapp/send', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+         },
+        body: JSON.stringify({ numeroDestino, mensaje })
+         });
+    
+        if (response.ok) {
+            return 'Mensaje informativo enviado.';  // Puedes devolver el mensaje o lo que prefieras
+        } else {
+            const errorMessage = await response.text(); // Captura el cuerpo de la respuesta en caso de error
+            console.error(`Error al enviar el mensaje: ${errorMessage}`);
+            return `Error al enviar el mensaje: ${errorMessage}`;
+        }
+
+    } catch (error) {
+        console.error('Error en el fetch:', error);
+        return `Error en el fetch: ${error.message}`;
+    }
+}
 
 client.initialize();
 
