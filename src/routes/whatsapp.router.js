@@ -56,6 +56,12 @@ client.on('message_create', async message => {
                 }    
                 mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
                 await sendMessages(mensaje, numeroDestino);
+            case 199:
+                mensaje = 'Por favor, coloca tu nombre';
+                await sendMessages(mensaje, numeroDestino);
+            case 'Buenas CHUPAPIJAS.COM.NET':
+                mensaje = 'Hola cabeza de pija, queres trabajar? Vamos a registrarnos 199_SI';
+                await sendMessages(mensaje, numeroDestino);
             default:
                 if (!numeroVirgen.isArchived)
                 {
