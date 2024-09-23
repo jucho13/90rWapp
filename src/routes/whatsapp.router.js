@@ -56,12 +56,6 @@ client.on('message_create', async message => {
                 }    
                 mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
                 await sendMessages(mensaje, numeroDestino);
-            case 199:
-                mensaje = 'Por favor, coloca tu nombre';
-                await sendMessages(mensaje, numeroDestino);
-            case 'Buenas CHUPAPIJAS.COM.NET':
-                mensaje = 'Hola cabeza de pija, queres trabajar? Vamos a registrarnos 199_SI';
-                await sendMessages(mensaje, numeroDestino);
             default:
                 if (!numeroVirgen.isArchived)
                 {
@@ -69,12 +63,32 @@ client.on('message_create', async message => {
                 }
                 const connection=await whatsappService.getLastConnection(numeroDestino); // obtiene la ultima consulta del usuario
                 console.log(`Resultado de getLastConnection ${connection}`);
-                
+                if (message._data.type === 'order') {
+                    const orderDetails =await message.getOrder(); // Suponiendo que exista este campo
+                    if (orderDetails && orderDetails.products) {
+                        const products = orderDetails.products;
+                        
+                        products.forEach(product => {
+                            const productId = product.id;
+                            const productQuantity = product.quantity;
+            
+                            console.log(`Producto ID: ${productId}, Cantidad: ${productQuantity}`);
+                        });
+                    }
+                    mensaje='Indica una direccion para la entrega de su pedido'
+                    await sendMessages(mensaje, numeroDestino);
+                    break;
+                }
                 if (await validateMoreThanOneHourConnection(connection)){ // Valida que haya pasado mas de una hora de su ultima consulta
                     const newConnection= Date.now();
-                    await whatsappService.updateConnection(numeroDestino,newConnection); // actualiza su ultima conexion
+                    if(await whatsappService.getByNumber(numeroDestino)=== undefined){
+                        console.log('creando usuario');
+                        
+                        await whatsappService.saveUser(numeroDestino,newConnection); // crea el nuevo usuario
+                    }
                     mensaje = 'Bienvenido a 90R! 🥕🥔\n\nGracias por contactarnos! Nos enorgullece ofrecerte los mejores precios en productos frescos en Mar del Plata  🍉🍇\n\n¿Cómo te podemos ayudar? Por favor, elige una de las siguientes opciones:\n\n✅ Compra: Escribe 1 para conocer el proceso de compra\n✅ Pedidos: Escribe 2 para revisar tus pedidos\n✅ Contacto: Escribe 3 para hablar con nosotros';
                     await sendMessages(mensaje, numeroDestino);
+                    
                 }else{ // si paso menos de una hora de su ultima consulta
                     if (numeroVirgen.isArchived) // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
                     {

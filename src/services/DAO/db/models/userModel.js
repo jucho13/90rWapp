@@ -17,6 +17,7 @@ const schema = new mongoose.Schema({
     loggedBy: String,
     status: String,
     cel: Number,
+    steps: Number,
     lastConnection: Date
 })
 
