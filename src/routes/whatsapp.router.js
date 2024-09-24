@@ -2,7 +2,7 @@ import { Router } from "express";
 import pkg from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
 import { validatePhoneNumber, validateMoreThanOneHourConnection } from "../../utils.js";
-import {whatsappService} from "../services/factory.js";
+import {whatsappService, orderService} from "../services/factory.js";
 
 const { Client, LocalAuth} = pkg;
 const router= Router();
@@ -62,9 +62,42 @@ client.on('message_create', async message => {
                     await client.archiveChat(numeroVirgen);
                 }
                 const connection=await whatsappService.getLastConnection(numeroDestino); // obtiene la ultima consulta del usuario
+                const user = await whatsappService.getByNumber(numeroDestino);
+                console.log(user);
+                
+                if(user){// respuesta despues de una orden de pedido en casa de que el usuario no tenga direccion
+                    if(user.steps === 1){
+                        const direccionUser= message._data.body;
+                        await whatsappService.updateDireccion(numeroDestino, direccionUser);
+                        //tomar horarios disponibles para la entrega
+                        mensaje= `Elija un horario de los siguientes para la entrega:`
+                        await whatsappService.updateSteps(numeroDestino, 2);
+                        await sendMessages(mensaje, numeroDestino);
+                        break;
+                    }
+                    else if(user.steps === 2){//aca entraria para elegir el horario del envio
+                        if(response === 10){// entre las 10 y las 15 
+
+                        }
+                        else if (response === 15){ // entre las 15 y las 20
+
+                        }
+                        else{// este seria un horario especial premium abonando un diferencial
+                    }
+                    }
+                }
                 console.log(`Resultado de getLastConnection ${connection}`);
                 if (message._data.type === 'order') {
-                    const orderDetails =await message.getOrder(); // Suponiendo que exista este campo
+                    if(!user){
+                        const newConnection= Date.now();
+                        await whatsappService.saveUser(numeroDestino,newConnection, message.orderId); // crea el nuevo usuario
+                            
+                    }
+                    else
+                    {
+                        await orderService.updateOrder(numeroDestino, message.orderId);
+                    }
+                    const orderDetails =await message.getOrder(); 
                     if (orderDetails && orderDetails.products) {
                         const products = orderDetails.products;
                         
@@ -77,28 +110,62 @@ client.on('message_create', async message => {
                     }
                     mensaje='Indica una direccion para la entrega de su pedido'
                     await sendMessages(mensaje, numeroDestino);
+                    await whatsappService.updateSteps(numeroDestino, 1);
+                    await whatsappService.updateOrder(numeroDestino, message.orderId);//REVISAR ESTE Y EL DE ABAJO
+                    // await orderService.createOrder(numeroDestino, products, )
                     break;
                 }
-                if (await validateMoreThanOneHourConnection(connection)){ // Valida que haya pasado mas de una hora de su ultima consulta
-                    const newConnection= Date.now();
-                    if(await whatsappService.getByNumber(numeroDestino)=== undefined){
-                        console.log('creando usuario');
-                        
-                        await whatsappService.saveUser(numeroDestino,newConnection); // crea el nuevo usuario
-                    }
-                    mensaje = 'Bienvenido a 90R! 🥕🥔\n\nGracias por contactarnos! Nos enorgullece ofrecerte los mejores precios en productos frescos en Mar del Plata  🍉🍇\n\n¿Cómo te podemos ayudar? Por favor, elige una de las siguientes opciones:\n\n✅ Compra: Escribe 1 para conocer el proceso de compra\n✅ Pedidos: Escribe 2 para revisar tus pedidos\n✅ Contacto: Escribe 3 para hablar con nosotros';
-                    await sendMessages(mensaje, numeroDestino);
+                else if(message._data.type === 'chat'){
+                    console.log('hola');
                     
-                }else{ // si paso menos de una hora de su ultima consulta
+                    if (await validateMoreThanOneHourConnection(connection)){ // Valida que haya pasado mas de una hora de su ultima consulta
+                        console.log('paso mas de una hora');
+                        
+                        const newConnection= Date.now();
+                        if(await whatsappService.getByNumber(numeroDestino)=== undefined){
+                            console.log('creando usuario');
+                            
+                            await whatsappService.saveUser(numeroDestino,newConnection); // crea el nuevo usuario
+                        }
+                        mensaje = 'Bienvenido a 90R! 🥕🥔\n\nGracias por contactarnos! Nos enorgullece ofrecerte los mejores precios en productos frescos en Mar del Plata  🍉🍇\n\n¿Cómo te podemos ayudar? Por favor, elige una de las siguientes opciones:\n\n✅ Compra: Escribe 1 para conocer el proceso de compra\n✅ Pedidos: Escribe 2 para revisar tus pedidos\n✅ Contacto: Escribe 3 para hablar con nosotros';
+                        await sendMessages(mensaje, numeroDestino);
+                        break;
+                        
+                    }else{ // si paso menos de una hora de su ultima consulta
+                        if (numeroVirgen.isArchived) // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
+                        {
+                            console.log('esta archivado, se desarchiva');
+                            
+                            await client.unarchiveChat(numeroVirgen);
+                            mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
+                            await sendMessages(mensaje, numeroDestino);
+                            break;
+                        }
+                        else{
+                            await client.unarchiveChat(numeroVirgen);
+                            mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
+                            await sendMessages(mensaje, numeroDestino);
+                            break;
+                        }
+                        
+                    }
+                }
+                else{
                     if (numeroVirgen.isArchived) // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
                     {
+                        console.log('No es un mensaje tipo chat ni order');
                         await client.unarchiveChat(numeroVirgen);
                         mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
                         await sendMessages(mensaje, numeroDestino);
+                        break;
                     }
-                        
-                    
+                    else{
+                        mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
+                        await sendMessages(mensaje, numeroDestino);
+                        break;
+                    }
                 }
+                
                     
         }
     }catch (error) {

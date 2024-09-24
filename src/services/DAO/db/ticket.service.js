@@ -1,5 +1,5 @@
 import { ticketModel } from './models/ticketModel.js'
-import { cartService } from '../../factory.js';
+
 import { productService } from '../../factory.js';
 
 export default class ticketService {

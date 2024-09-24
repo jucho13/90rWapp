@@ -4,7 +4,7 @@ import bodyParser from 'body-parser'
 import wsappRouter from './routes/whatsapp.router.js';
 
 //import managers
-import { cartService, chatService, productService } from "./services/factory.js";
+import { chatService, productService } from "./services/factory.js";
 
 
 const app=express();

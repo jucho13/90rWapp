@@ -3,17 +3,15 @@ import mongoose from 'mongoose';
 const collection = 'users';
 
 const schema = new mongoose.Schema({
-    first_name: String,
-    last_name: String,
-    email: {
-        type: String,
-        unique: true
-    },
-    password: String,
-    cart:{
+    pedidoActivo: {
         type: Array,
         default:[]
     },
+    pedidosCompletados:{
+        type: Array,
+        default:[]
+    },
+    direccion: String,
     loggedBy: String,
     status: String,
     cel: Number,

@@ -2,10 +2,11 @@ import MongoSingleton from '../config/db.js'
 
 let chatService;
 let productService;
-let cartService;
+let orderService;
 let ticketService;
 let userService;
 let whatsappService;
+
 
 async function initializeMongoService() {
     console.log("Iniciando servicio para MongoDB");
@@ -18,6 +19,11 @@ async function initializeMongoService() {
         ticketService= new ticketServiceMongo();
         console.log("Servicio de tickets cargado:");
         console.log(ticketService);
+
+        const { default: orderServiceMongo } = await import('./DAO/db/order.service.js');
+        orderService= new orderServiceMongo();
+        console.log("Servicio de orders cargado:");
+        console.log(orderService);
 
         
  
@@ -34,4 +40,4 @@ async function initializeMongoService() {
 initializeMongoService();
 
 
-export { productService, cartService, ticketService, chatService, userService, whatsappService }
+export { productService, orderService, ticketService, chatService, userService, whatsappService }
