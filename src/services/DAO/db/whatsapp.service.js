@@ -45,7 +45,9 @@ export default class whatsappService {
     }
     updateDireccion = async (cel, direccion) =>{
         let updates= await userModel.updateOne({cel:cel},{$set:{direccion:direccion}});
+        return updates;
     }
+    getActiveOrderByID= async (cel,id) // este devuelve true si existe una orden activa del usuario
     updateConnection = async (cel,connection) => {
         let updates = await userModel.updateOne({ cel: cel }, { $set: { lastConnection: connection } });
         return updates;
