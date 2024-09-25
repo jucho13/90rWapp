@@ -3,12 +3,12 @@ import userModel from "./models/userModel.js";
 
 export default class whatsappService {
     saveUser= async (cel, connection, orderId)=>{
-        const data = {cel:cel, lastConnection: connection, status: 'Active', loggedBy: 'whatsapp', steps: 0, orderId:[orderId]}
+        const data = {cel:cel, lastConnection: connection, status: 'Active', loggedBy: 'whatsapp', steps: 0, pedidoActivo:[orderId]}
         let result = await userModel.create(data);
         return result;
     }
     updateOrder= async (cel, orderId)=>{
-        const user = userModel.updateOne({cel:cel, pedidoActivo: [orderId]})
+        const user =await userModel.updateOne({cel:cel, pedidoActivo: [orderId]})
         if(user){
             return user;
         }
@@ -17,7 +17,7 @@ export default class whatsappService {
         }
     }
     updateSteps = async (cel,step) => {
-        let user = userModel.updateOne({cel:cel, steps: step});
+        let user = await userModel.updateOne({cel:cel, steps: step});
         if(user){
             return user;
         }
@@ -47,7 +47,7 @@ export default class whatsappService {
         let updates= await userModel.updateOne({cel:cel},{$set:{direccion:direccion}});
         return updates;
     }
-    getActiveOrderByID= async (cel,id) // este devuelve true si existe una orden activa del usuario
+    // getActiveOrderByID= async (cel,id) // este devuelve true si existe una orden activa del usuario
     updateConnection = async (cel,connection) => {
         let updates = await userModel.updateOne({ cel: cel }, { $set: { lastConnection: connection } });
         return updates;

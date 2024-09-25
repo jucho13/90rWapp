@@ -1,9 +1,9 @@
 import pedidoModel from "./models/pedidoModel.js";
 
 export default class orderService {
-    saveOrder= async (cel, productos, idWP, importe, direccion)=>{
+    saveOrder= async (cel, productos, importe, direccion, horario, orderID)=>{
         try {
-            const data = {cel:cel, productos: productos, idWP:idWP, importe:importe, direccion:direccion}
+            const data = {cel:cel, productos: productos,horario:horario, importe:importe, direccion:direccion, orderID:orderID}
             let result = await pedidoModel.create(data);
             return result;
         } catch (error) {

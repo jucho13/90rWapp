@@ -70,34 +70,49 @@ client.on('message_create', async message => {
                         const direccionUser= message._data.body;
                         await whatsappService.updateDireccion(numeroDestino, direccionUser);
                         //tomar horarios disponibles para la entrega
-                        mensaje= `Elija un horario de los siguientes para la entrega:`
+                        mensaje= `Elija un horario de los siguientes para la entrega:
+                        \n Ingrese 10       Para seleccionar el horario de 10:00 a 15:00hs\n
+                        Ingresa 15         Para seleccionar el horario de 15:00 a 20:00hs \n
+                        Ingresa 0          Para seleccionar un horario especial con un amplitud de una hora y un recargo`
                         await whatsappService.updateSteps(numeroDestino, 2);
                         await sendMessages(mensaje, numeroDestino);
                         break;
                     }
-                    else if(user.steps === 2){//aca entraria para elegir el horario del envio
-                        if(response === 10){// entre las 10 y las 15 
+                    else if(user.steps === 2){//aca entraria despues de elegir el horario del envio
+                        const orderDetails =await message.getOrder();
+                        console.log(orderDetails);
+                        
+                        if (orderDetails && orderDetails.products) {
+                            const products = orderDetails.products;
+                            
+                            products.forEach(product => {
+                                const productId = product.id;
+                                const productQuantity = product.quantity;
+                
+                                console.log(`Producto ID: ${productId}, Cantidad: ${productQuantity}`);
+                            });
+                        } 
+                        // if(response === 10){// entre las 10 y las 15 
 
-                        }
-                        else if (response === 15){ // entre las 15 y las 20
-
-                        }
-                        else{// este seria un horario especial premium abonando un diferencial
-                    }
+                        //     await orderService.createOrder(numeroDestino, orderDetails.products,idWP, importe, direccion, horario )
+                        //     await whatsappService.updateSteps(numeroDestino, 3);// cuando se entrega el pedido, el step vuelve a 0
+                        // }
+                        // else if (response === 15){ // entre las 15 y las 20
+                        //     //REVISAR ESTE Y EL DE ABAJO
+                        //     await orderService.createOrder(numeroDestino, products,idWP, importe, direccion, horario )
+                        //     await whatsappService.updateSteps(numeroDestino, 3);
+                        // }
+                        // else{// este seria un horario especial premium abonando un diferencial 
+                        //     await orderService.createOrder(numeroDestino, products,idWP, importe, direccion, horario )
+                        //     await whatsappService.updateSteps(numeroDestino, 3);
+                        // }
+                        break;
                     }
                 }
                 console.log(`Resultado de getLastConnection ${connection}`);
                 if (message._data.type === 'order') {
-                    if(!user){
-                        const newConnection= Date.now();
-                        await whatsappService.saveUser(numeroDestino,newConnection, message.orderId); // crea el nuevo usuario
-                            
-                    }
-                    else
-                    {
-                        await orderService.updateOrder(numeroDestino, message.orderId);
-                    }
-                    const orderDetails =await message.getOrder(); 
+                    const orderDetails =await message.getOrder();
+                    mensaje='Indica una direccion para la entrega de su pedido'
                     if (orderDetails && orderDetails.products) {
                         const products = orderDetails.products;
                         
@@ -107,12 +122,21 @@ client.on('message_create', async message => {
             
                             console.log(`Producto ID: ${productId}, Cantidad: ${productQuantity}`);
                         });
+                    } 
+                    if(!user){
+                        await whatsappService.saveUser(numeroDestino,connection, message.orderId); // crea el nuevo usuario
+                        await sendMessages(mensaje, numeroDestino);
+                        await whatsappService.updateSteps(numeroDestino, 1);
+                        await orderService.saveOrder(numeroDestino, orderDetails.products, message._data.totalAmount1000/1000, message.orderId );   
                     }
-                    mensaje='Indica una direccion para la entrega de su pedido'
-                    await sendMessages(mensaje, numeroDestino);
-                    await whatsappService.updateSteps(numeroDestino, 1);
-                    await whatsappService.updateOrder(numeroDestino, message.orderId);//REVISAR ESTE Y EL DE ABAJO
-                    // await orderService.createOrder(numeroDestino, products, )
+                    else
+                    {
+                        await whatsappService.updateConnection(numeroDestino, connection);
+                        await whatsappService.updateOrder(numeroDestino, message.orderId);
+                        await whatsappService.updateSteps(numeroDestino, 1); 
+                        const userV= await whatsappService.getByNumber(numeroDestino);
+                        await orderService.saveOrder(numeroDestino, orderDetails.products, message._data.totalAmount1000/1000, userV.direccion,message.orderId );
+                    }
                     break;
                 }
                 else if(message._data.type === 'chat'){

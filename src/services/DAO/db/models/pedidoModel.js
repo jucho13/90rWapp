@@ -7,10 +7,12 @@ const schema = new mongoose.Schema({
         type: Array,
         default:[]
     },
+    horario: Number,
     direccion: String,
     cel: Number,
     importe: Number,
-    idWP: String
+    WP: Number,
+    orderID: String
 })
 
 const pedidoModel = mongoose.model(collection, schema);
