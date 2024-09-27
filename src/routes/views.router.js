@@ -1,8 +1,4 @@
 import {Router} from 'express';
-import { sessionManagement, vistaNormal, failRegister,
-     failLogin, register, profile, logOut, login,loginPost,registerPost} from '../controllers/user.controller.js';
-import { privateMood } from '../controllers/user.admin.controller.js';
-
 
 import { authAdmin,authUser } from '../../utils.js';
 const router = Router();

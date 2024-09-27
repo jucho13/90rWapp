@@ -1,7 +1,7 @@
 import { Router } from "express";
 import pkg from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
-import { validatePhoneNumber, validateMoreThanOneHourConnection } from "../../utils.js";
+import { validatePhoneNumber, validateMoreThanOneHourConnection, generarMensajePedidos } from "../../utils.js";
 import {whatsappService, orderService} from "../services/factory.js";
 
 const { Client, LocalAuth} = pkg;
@@ -33,34 +33,30 @@ client.on('message_create', async message => {
         response = parseInt(message.body);
         const numeroVirgen=message._data.from;
         const numeroDestino= await validatePhoneNumber(numeroVirgen);
+        
         let mensaje;
         switch (response) {
+            case 0:
+                await whatsappService.updateSteps(numeroDestino, 0);
+                await client.archiveChat(numeroVirgen); 
+                break;
             case 1:
-                if (!numeroVirgen.isArchived)
-                {
-                    await client.archiveChat(numeroVirgen);
-                }
+                await client.archiveChat(numeroVirgen);
                 mensaje = "Donde se encuentra nuestro numero de telefono, puede acceder al catalogo y agregar productos a su pedido.\n\nEn el caso de aun no poder puede guiarse con este video: https://youtu.be/MPyotKqxvIc?si=yfdYUK6pCDAGYuAH";
                 await sendMessages(mensaje,numeroDestino);
             case 2:
-                if (!numeroVirgen.isArchived)
-                {
-                    await client.archiveChat(numeroVirgen);
-                }
-                console.log("Respuesta Negativa");
+                await client.archiveChat(numeroVirgen);
+                const pedidos= await orderService.getOrdersByCel(numeroDestino);
+                await generarMensajePedidos(pedidos);
                 break;
             case 3:
-                if (numeroVirgen.isArchived)
-                {
-                    await client.unarchiveChat(numeroVirgen);
-                }    
+                await client.unarchiveChat(numeroVirgen);
                 mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
                 await sendMessages(mensaje, numeroDestino);
+                await whatsappService.updateSteps(numeroDestino, 4);
+                break;
             default:
-                if (!numeroVirgen.isArchived)
-                {
-                    await client.archiveChat(numeroVirgen);
-                }
+                await client.archiveChat(numeroVirgen);
                 const connection=await whatsappService.getLastConnection(numeroDestino); // obtiene la ultima consulta del usuario
                 const user = await whatsappService.getByNumber(numeroDestino);
                 console.log(user);
@@ -79,19 +75,20 @@ client.on('message_create', async message => {
                         break;
                     }
                     else if(user.steps === 2){//aca entraria despues de elegir el horario del envio
-                        const orderDetails =await message.getOrder();
-                        console.log(orderDetails);
+                        await orderService.updateHorario(numeroDestino, message._data.body);
+                        // const orderDetails =await message.getOrder();
+                        // console.log(orderDetails);
                         
-                        if (orderDetails && orderDetails.products) {
-                            const products = orderDetails.products;
+                        // if (orderDetails && orderDetails.products) {
+                        //     const products = orderDetails.products;
                             
-                            products.forEach(product => {
-                                const productId = product.id;
-                                const productQuantity = product.quantity;
+                        //     products.forEach(product => {
+                        //         const productId = product.id;
+                        //         const productQuantity = product.quantity;
                 
-                                console.log(`Producto ID: ${productId}, Cantidad: ${productQuantity}`);
-                            });
-                        } 
+                        //         console.log(`Producto ID: ${productId}, Cantidad: ${productQuantity}`);
+                        //     });
+                        // } 
                         // if(response === 10){// entre las 10 y las 15 
 
                         //     await orderService.createOrder(numeroDestino, orderDetails.products,idWP, importe, direccion, horario )
@@ -108,11 +105,15 @@ client.on('message_create', async message => {
                         // }
                         break;
                     }
+                    else if(user.steps === 4){
+                        await client.unarchiveChat(numeroVirgen);
+                        break;
+                    }
                 }
                 console.log(`Resultado de getLastConnection ${connection}`);
                 if (message._data.type === 'order') {
                     const orderDetails =await message.getOrder();
-                    mensaje='Indica una direccion para la entrega de su pedido'
+                    mensaje='Indica una direccion para la entrega de su pedido (direccion altura) /nEn caso de ser departamento (direccion altura P/D)'
                     if (orderDetails && orderDetails.products) {
                         const products = orderDetails.products;
                         
@@ -156,48 +157,28 @@ client.on('message_create', async message => {
                         break;
                         
                     }else{ // si paso menos de una hora de su ultima consulta
-                        if (numeroVirgen.isArchived) // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
-                        {
+                         // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
                             console.log('esta archivado, se desarchiva');
-                            
                             await client.unarchiveChat(numeroVirgen);
                             mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
                             await sendMessages(mensaje, numeroDestino);
                             break;
                         }
-                        else{
-                            await client.unarchiveChat(numeroVirgen);
-                            mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
-                            await sendMessages(mensaje, numeroDestino);
-                            break;
-                        }
-                        
-                    }
                 }
                 else{
-                    if (numeroVirgen.isArchived) // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
-                    {
+                     // Si el numero esta archivado significa que no tuvo relevancia para hablar con el cliente, por lo tanto, se lo desarchiva, se manda el mensaje de bot y queda desarchivado para poder hablar normalmente por una hora
                         console.log('No es un mensaje tipo chat ni order');
                         await client.unarchiveChat(numeroVirgen);
                         mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
                         await sendMessages(mensaje, numeroDestino);
                         break;
-                    }
-                    else{
-                        mensaje = 'Por favor, deje su consulta y enseguida le responderemos';
-                        await sendMessages(mensaje, numeroDestino);
-                        break;
-                    }
-                }
-                
-                    
+                }       
         }
     }catch (error) {
         console.log(error);
     }
 });
 
-    
 router.post('/send', async (req, res) => {
     const { numeroDestino, mensaje } = req.body;
     if (!numeroDestino || !mensaje) {

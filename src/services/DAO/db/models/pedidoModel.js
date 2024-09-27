@@ -11,8 +11,8 @@ const schema = new mongoose.Schema({
     direccion: String,
     cel: Number,
     importe: Number,
-    WP: Number,
-    orderID: String
+    orderID: Number,
+    fecha: Date
 })
 
 const pedidoModel = mongoose.model(collection, schema);
