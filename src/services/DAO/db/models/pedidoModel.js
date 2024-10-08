@@ -8,11 +8,13 @@ const schema = new mongoose.Schema({
         default:[]
     },
     horario: Number,
+    dia:Number,
     direccion: String,
     cel: Number,
     importe: Number,
     orderID: Number,
-    fecha: Date
+    fecha: Date,
+    estado: String
 })
 
 const pedidoModel = mongoose.model(collection, schema);

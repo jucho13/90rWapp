@@ -6,6 +6,7 @@ let orderService;
 let ticketService;
 let userService;
 let whatsappService;
+let logisticaService;
 
 
 async function initializeMongoService() {
@@ -25,6 +26,10 @@ async function initializeMongoService() {
         console.log("Servicio de orders cargado:");
         console.log(orderService);
 
+        const { default: logisticaServiceMongo } = await import('./DAO/db/logistica.service.js');
+        logisticaService= new logisticaServiceMongo();
+        console.log("Servicio de logistica cargado:");
+        console.log(logisticaService);
         
  
         const { default: whatsappServiceMongo } = await import('./DAO/db/whatsapp.service.js');
@@ -40,4 +45,4 @@ async function initializeMongoService() {
 initializeMongoService();
 
 
-export { productService, orderService, ticketService, chatService, userService, whatsappService }
+export { productService, orderService, ticketService, chatService, userService, whatsappService, logisticaService }

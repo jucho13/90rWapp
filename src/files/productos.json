@@ -1,230 +1,37 @@
 [
     {
-        "title": "Sal",
-        "description": "Esperanza",
-        "price": 11,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "C2382",
-        "stock": 400,
-        "status": "true",
+        "nombre": "Banana Ecuador",
+        "peso": 17,
         "id": 0
     },
     {
-        "title": "Azucar",
-        "description": "Ledesma",
-        "price": 7,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "C5382",
-        "stock": 300,
-        "status": "true",
+        "nombre": "Tomate Redondo",
+        "peso": 15,
         "id": 0
     },
     {
-        "title": "Pan",
-        "description": "Bimbo",
-        "price": 5,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "A4382",
-        "stock": 200,
-        "status": "true",
+        "nombre": "Lechuga Repollada",
+        "peso": 10,
         "id": 0
     },
     {
-        "title": "Leche",
-        "description": "La serenisima",
-        "price": 8,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "A4382",
-        "stock": 140,
-        "status": "true",
+        "nombre": "Zanahoria",
+        "peso": 16,
         "id": 0
     },
     {
-        "title": "Papas Fritas",
-        "description": "Lays",
-        "price": 10,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "P3382",
-        "stock": 1000,
-        "status": "true",
+        "nombre": "Papa",
+        "peso": 17,
         "id": 0
     },
     {
-        "title": "Gaseosa",
-        "description": "Coca-Cola",
-        "price": 7,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "P2382",
-        "stock": 1300,
-        "status": "true",
+        "nombre": "Zapallo",
+        "peso": 17,
         "id": 0
     },
     {
-        "title": "Gaseosa",
-        "description": "Sprite",
-        "price": 6,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "F4382",
-        "stock": 1000,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Gaseosa",
-        "description": "Fanta",
-        "price": 5,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "VA382",
-        "stock": 900,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Atun",
-        "description": "La Campagnola",
-        "price": 10,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "L9382",
-        "stock": 2000,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Choclo",
-        "description": "La Campagnola",
-        "price": 10,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "NA3382",
-        "stock": 100,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Manzana",
-        "description": "La Humedad",
-        "price": 2,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "N3382",
-        "stock": 100,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Pan",
-        "description": "La menta",
-        "price": 2,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "92A2",
-        "stock": 1400,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Dentrifrico",
-        "description": "Colgate",
-        "price": 12,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "MA3852",
-        "stock": 1000,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Cepillo",
-        "description": "Mans",
-        "price": 17,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "LY332",
-        "stock": 100,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Pincel",
-        "description": "Lastro",
-        "price": 1,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "P3992",
-        "stock": 108,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "TV",
-        "description": "32P Samsung",
-        "price": 176,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "P3N82",
-        "stock": 100,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "TV",
-        "description": "42P Philco",
-        "price": 132,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "P3EW2",
-        "stock": 14,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Papas Fritas",
-        "description": "Pehuamar",
-        "price": 19,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "MIN382",
-        "stock": 1000,
-        "status": "true",
-        "id": 0
-    },
-    {
-        "title": "Papas Fritas",
-        "description": "Lon",
-        "price": 8,
-        "thumbnail": [
-            "https://carrefourar.vtexassets.com/arquivos/ids/257852-800-auto?v=638011165657870000&width=800&height=auto&aspect=true"
-        ],
-        "code": "MNB82",
-        "stock": 2000,
-        "status": "true",
+        "nombre": "Mix de frutos",
+        "peso": 1,
         "id": 0
     }
 ]
