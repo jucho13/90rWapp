@@ -50,13 +50,22 @@ client.on('message_create', async message => {
                 break;
             case 1:
                 await client.archiveChat(numeroVirgen);
-                mensaje = "Donde se encuentra nuestro numero de telefono, puede acceder al catálogo y agregar productos a su pedido. Si desea algun producto que no se encuentra en nuestro catálogo o si tiene alguna otra consulta, escriba 3\n\nEn el caso de aun no poder, puede guiarse con este video: https://youtu.be/MPyotKqxvIc?si=yfdYUK6pCDAGYuAH";
+                mensaje = "Donde se encuentra nuestro numero de telefono, puede acceder al catálogo y agregar productos a su pedido.\n Si desea algun producto que no se encuentra en nuestro catálogo o si tiene alguna otra consulta, escriba 3\nSi quiere ver sus pedidos, responda 2\nEn el caso de aun no poder, puede guiarse con este video: https://youtu.be/MPyotKqxvIc?si=yfdYUK6pCDAGYuAH";
                 await sendMessages(mensaje,numeroDestino);
+                await whatsappService.updateSteps(numeroDestino, 4);
                 break;
             case 2:
                 await client.archiveChat(numeroVirgen);
                 const pedidos= await orderService.getOrdersByCel(numeroDestino);
-                await generarMensajePedidos(pedidos);
+                if (pedidos){
+                    const mensajePedidos=await generarMensajePedidos(pedidos);
+                    await sendMessages(mensajePedidos, numeroDestino);
+                }
+                else{
+                    mensaje=`El numero ${numeroDestino} no tiene pedidos realizados en esta plataforma`
+                    await sendMessages(mensaje, numeroDestino);
+                }
+                
                 break;
             case 3:
                 await client.unarchiveChat(numeroVirgen);
