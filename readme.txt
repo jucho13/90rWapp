@@ -1,23 +1,15 @@
-APP de Compras integramente por whatsapp con robot integrado, catalogo y procesamiento de pedidos.
+Hola, bienvenido a mi app de compras online, vas a poder crear un usuario loguearte y tener diferentes
+versiones de los mismos. En la pagina principal vas a poder acceder a tu carrito, a una seccion donde 
+los usuarios puedan chatear, otra donde podran ver los usuarios registrados en la app y van a poder 
+eliminar a los que no estan activos. Tambien, en exclusivo para el admin podra acceder a una seccion 
+llamado adminVista (boton), donde podra modificar el rol del usuario premium/user, y eliminar el usuario 
+en el caso de lo quisiese.
 
-Cuando el admin termine de hablar con el cliente le dira: ¿Su consulta fue respondida? Por favor envie a 0 en caso de ser correcto
-El 0 lo archiva y lo deja en step 0 que hace que quede presto para recibir un nuevo pedido, consulta o charla con el bot
+Cuando se registra puede optar por el tipo de usuario, en el caso que quisiese ser ADMIN, 
+tiene que poner el email= adminCoder@coder.com.
+El resto de tipo de cuentas es libre, o user o premium.
 
+El comienzo del trayecto comienza en https://desafio410-production.up.railway.app/register
 
-Cada mes nuevo debe agregarse a la base de datos, sacando los dias domingos,mandando el numero 121212.
+Gracias por este trayecto, ha sido un placer. 
 
-ESTADOS DE UN PEDIDO:
-INICIADO:
-Cuando la orden del catalogo es iniciada (es lo primero que recibe el programa)
-ACEPTADO:
-Cuando el cliente acepta todas las condiciones de entrega
-DESPACHADO: 
-Cuando el worker acepta el pedido y esta en proceso de entrega
-ACEPTADO:
-Cuando durante el dia de la entrega el cliente vuelve a aceptar que se va a encontrar en el lugar 
-ENTREGADO:
-Cuando el pedido es entregado sin cajones detras
-ENTREGADO/PENDIENTE:
-Cuando el pedido es entregado con cajones pendientes
-ENTREGADO/DEUDOR:
-Cuando el pedido es entregado pero el cliente tiene algo impago
