@@ -8,7 +8,7 @@ import { client } from "../services/factory.js";
 
 const router= Router();
 let response;
-
+if (client){
     client.initialize();
     client.on('ready', () => {
         console.log('Client is ready!');
@@ -336,7 +336,7 @@ let response;
             return `Error en el fetch: ${error.message}`;
         }
     }
-
+}
 
 
 async function procesarHorario(numeroDestinoc,respuesta,diaDeHoy) {
