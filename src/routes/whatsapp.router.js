@@ -9,6 +9,10 @@ import pkg from "whatsapp-web.js";
 const { RemoteAuth, Client } = pkg;
 const router= Router();
 let response;
+import MongoSingleton from "../config/db.js";
+
+const connection= await MongoSingleton.getIntance()
+console.log(connection);
 
 
 const whatsappClient= () => {
