@@ -5,7 +5,7 @@ import {whatsappService, orderService, logisticaService} from "../services/facto
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
 import { MongoStore } from 'wwebjs-mongo';
 import mongoose from 'mongoose';
-const pkg = require("whatsapp-web.js");
+import pkg from "whatsapp-web.js";
 const { RemoteAuth, Client } = pkg;
 const router= Router();
 let response;
