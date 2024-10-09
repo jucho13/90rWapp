@@ -3,10 +3,10 @@ import qrcode from 'qrcode-terminal';
 import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConnection, generarMensajePedidos, recibirDateDevolverDia,sumarDias } from "../../utils.js";
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
-import { RemoteAuth, Client } from "whatsapp-web.js";
 import { MongoStore } from 'wwebjs-mongo';
 import mongoose from 'mongoose';
-
+const pkg = require("whatsapp-web.js");
+const { RemoteAuth, Client } = pkg;
 const router= Router();
 let response;
 
