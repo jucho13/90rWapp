@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import{MongoStore} from "wwebjs-mongo";
 import pkg from "whatsapp-web.js";
 const { RemoteAuth, Client } = pkg;
 
