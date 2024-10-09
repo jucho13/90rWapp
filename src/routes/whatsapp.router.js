@@ -3,22 +3,13 @@ import qrcode from 'qrcode-terminal';
 import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConnection, generarMensajePedidos, recibirDateDevolverDia,sumarDias } from "../../utils.js";
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
-import { RemoteAuth, client } from "whatsapp-web.js";
+import { RemoteAuth, Client } from "whatsapp-web.js";
 import { MongoStore } from 'wwebjs-mongo';
 import mongoose from 'mongoose';
 
 const router= Router();
 let response;
 
-
-    
-client.on('ready', () => {
-    console.log('Client is ready!');
-});
-    
-client.on('qr', qr => {
-    qrcode.generate(qr, {small: true});
-});
 mongoose.connect(process.env.MONGO_URL).then(() => {
     const store = new MongoStore({ mongoose: mongoose });
     const client = new Client({
@@ -28,6 +19,13 @@ mongoose.connect(process.env.MONGO_URL).then(() => {
         })
     });
     client.initialize();
+});
+client.on('ready', () => {
+    console.log('Client is ready!');
+});
+    
+client.on('qr', qr => {
+    qrcode.generate(qr, {small: true});
 });
 client.on('message_create', async message => {
     try {
