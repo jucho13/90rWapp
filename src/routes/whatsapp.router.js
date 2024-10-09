@@ -9,7 +9,7 @@ import { client } from "../services/factory.js";
 const router= Router();
 let response;
 if (client){
-    client.initialize();
+    
     client.on('ready', () => {
         console.log('Client is ready!');
     });
