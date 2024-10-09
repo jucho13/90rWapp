@@ -1,5 +1,5 @@
 import { Router } from "express";
-import qrcode from 'qrcode-terminal';
+// import qrcode from 'qrcode-terminal';
 import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConnection, generarMensajePedidos, recibirDateDevolverDia,sumarDias } from "../../utils.js";
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
@@ -15,9 +15,9 @@ if (client){
         console.log('Client is ready!');
     });
         
-    client.on('qr', qr => {
-        qrcode.generate(qr, {small: true});
-    });
+    // client.on('qr', qr => {
+    //     qrcode.generate(qr, {small: true});
+    // });
     client.on('message_create', async message => {
         try {
             // Verifica que el mensaje no sea enviado por el bot
