@@ -5,13 +5,13 @@ import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConne
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
 
-const { Client, LocalAuth} = pkg;
+const { Client, noAuth} = pkg;
 const router= Router();
 let response;
 
 
 const client = new Client({
-    authStrategy: new LocalAuth()
+    authStrategy: new noAuth()
 })
     
 client.on('ready', () => {

@@ -3,8 +3,6 @@ import { __dirname } from "../utils.js";
 import bodyParser from 'body-parser'
 import wsappRouter from './routes/whatsapp.router.js';
 
-//import managers
-import { chatService, productService } from "./services/factory.js";
 
 
 const app=express();
@@ -18,5 +16,5 @@ app.use(bodyParser.json());
 
 app.use("/api/whatsapp", wsappRouter);
 
-const httpServer = app.listen(process.env.PORT || 8081, () => {console.log(`Server is running on port 8081`)});
+const httpServer = app.listen(process.env.PORT || 8081 );
 
