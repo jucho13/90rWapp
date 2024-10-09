@@ -1,18 +1,16 @@
 import { Router } from "express";
-import pkg from 'whatsapp-web.js';
 import qrcode from 'qrcode-terminal';
 import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConnection, generarMensajePedidos, recibirDateDevolverDia,sumarDias } from "../../utils.js";
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
-import { NoAuth } from "whatsapp-web.js";
-const { Client} = pkg;
+import { RemoteAuth, client } from "whatsapp-web.js";
+import { MongoStore } from 'wwebjs-mongo';
+import mongoose from 'mongoose';
+
 const router= Router();
 let response;
 
 
-const client = new Client({
-    authStrategy: new NoAuth()
-})
     
 client.on('ready', () => {
     console.log('Client is ready!');
@@ -21,8 +19,16 @@ client.on('ready', () => {
 client.on('qr', qr => {
     qrcode.generate(qr, {small: true});
 });
-    
-
+mongoose.connect(process.env.MONGO_URL).then(() => {
+    const store = new MongoStore({ mongoose: mongoose });
+    const client = new Client({
+        authStrategy: new RemoteAuth({
+            store: store,
+            backupSyncIntervalMs: 300000
+        })
+    });
+    client.initialize();
+});
 client.on('message_create', async message => {
     try {
         // Verifica que el mensaje no sea enviado por el bot
@@ -389,7 +395,6 @@ Día: ${dia}
     await whatsappService.updateSteps(numeroDestinoc, 3);
 }
 
-client.initialize();
 
 
 
