@@ -385,7 +385,6 @@ Día: ${dia}
     await whatsappService.updateSteps(numeroDestinoc, 3);
 }
 
-whatsappClient();
 
 
 
