@@ -2,7 +2,7 @@ import express from "express";
 import { __dirname } from "../utils.js";
 import bodyParser from 'body-parser'
 import wsappRouter from './routes/whatsapp.router.js';
-
+import MongoSingleton from "./config/db.js";
 
 
 const app=express();
@@ -15,6 +15,24 @@ app.use(bodyParser.json());
 
 
 app.use("/api/whatsapp", wsappRouter);
+
+const startServer = async () => {
+    try {
+        await MongoSingleton.getIntance(); // Asegúrate de que la conexión esté establecida
+        console.log("Conexión a MongoDB inicializada.");
+
+        const httpServer = app.listen(process.env.PORT || 8081, () => {
+            console.log(`Servidor escuchando en el puerto ${process.env.PORT || 8081}`);
+        });
+
+    } catch (error) {
+        console.error("Error al inicializar la conexión a MongoDB:", error);
+        process.exit(1); // Salir con código de error
+    }
+};
+
+// Iniciar el servidor
+startServer();
 
 const httpServer = app.listen(process.env.PORT || 8081 );
 
