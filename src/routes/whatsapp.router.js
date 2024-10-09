@@ -3,26 +3,12 @@ import qrcode from 'qrcode-terminal';
 import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConnection, generarMensajePedidos, recibirDateDevolverDia,sumarDias } from "../../utils.js";
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
-import { MongoStore } from 'wwebjs-mongo';
-import mongoose from 'mongoose';
-import pkg from "whatsapp-web.js";
-const { RemoteAuth, Client } = pkg;
+
+import { client } from "../services/factory.js";
+
 const router= Router();
 let response;
-import MongoSingleton from "../config/db.js";
 
-const connection= await MongoSingleton.getIntance()
-console.log(connection);
-
-
-const whatsappClient= () => {
-    const store = new MongoStore({ mongoose: mongoose });
-    const client = new Client({
-        authStrategy: new RemoteAuth({
-            store: store,
-            backupSyncIntervalMs: 300000
-        })
-    });
     client.initialize();
     client.on('ready', () => {
         console.log('Client is ready!');
@@ -350,7 +336,7 @@ const whatsappClient= () => {
             return `Error en el fetch: ${error.message}`;
         }
     }
-};
+
 
 
 async function procesarHorario(numeroDestinoc,respuesta,diaDeHoy) {

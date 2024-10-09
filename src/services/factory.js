@@ -7,14 +7,15 @@ let ticketService;
 let userService;
 let whatsappService;
 let logisticaService;
+let client;
 
 
 async function initializeMongoService() {
     console.log("Iniciando servicio para MongoDB");
     try {
         // conectamos Mongo
-        await MongoSingleton.getIntance()
-
+        const mongoInstance = await MongoSingleton.getIntance();
+        client =await mongoInstance.getClient();
     
         const { default: ticketServiceMongo } = await import('./DAO/db/ticket.service.js');
         ticketService= new ticketServiceMongo();
@@ -45,4 +46,4 @@ async function initializeMongoService() {
 initializeMongoService();
 
 
-export { productService, orderService, ticketService, chatService, userService, whatsappService, logisticaService }
+export { productService, orderService, ticketService, chatService, userService, whatsappService, logisticaService,client }
