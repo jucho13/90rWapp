@@ -10,7 +10,7 @@ const { RemoteAuth, Client } = pkg;
 const router= Router();
 let response;
 
-mongoose.connect(process.env.MONGO_URL).then(() => {
+mongoose.connect(process.env.MONGO_URI).then(() => {
     const store = new MongoStore({ mongoose: mongoose });
     const client = new Client({
         authStrategy: new RemoteAuth({
