@@ -21,10 +21,6 @@ const startServer = async () => {
         await MongoSingleton.getIntance(); // Asegúrate de que la conexión esté establecida
         console.log("Conexión a MongoDB inicializada.");
 
-        const httpServer = app.listen(process.env.PORT || 8081, () => {
-            console.log(`Servidor escuchando en el puerto ${process.env.PORT || 8081}`);
-        });
-
     } catch (error) {
         console.error("Error al inicializar la conexión a MongoDB:", error);
         process.exit(1); // Salir con código de error
