@@ -14,7 +14,7 @@ async function initializeMongoService() {
     console.log("Iniciando servicio para MongoDB");
     try {
         // conectamos Mongo
-        const mongoInstance = MongoSingleton.getIntance();
+        const mongoInstance = await MongoSingleton.getIntance();
         await mongoInstance; // Esperar a que la conexión esté establecida
         client = mongoInstance.getClient(); 
         const { default: ticketServiceMongo } = await import('./DAO/db/ticket.service.js');

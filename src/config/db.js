@@ -31,7 +31,6 @@ export default class MongoSingleton {
                 })
             });
 
-            await this.#client.initialize(); // Inicializa el cliente aquí
             console.log("Conectado con éxito a MongoDB usando Mongoose y cliente de WhatsApp inicializado.");
         } catch (error) {
             console.error("No se pudo conectar a la BD usando Mongoose: " + error);

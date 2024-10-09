@@ -4,9 +4,9 @@ import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConne
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
 
-import { client } from "../services/factory.js";
+import { cliente } from "../services/factory.js";
 
-// const client=await Client
+const client=cliente;
 const router= Router();
 let response;
 
