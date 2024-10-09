@@ -4,14 +4,14 @@ import qrcode from 'qrcode-terminal';
 import { obtenerHorarioString, validatePhoneNumber, validateMoreThanOneHourConnection, generarMensajePedidos, recibirDateDevolverDia,sumarDias } from "../../utils.js";
 import {whatsappService, orderService, logisticaService} from "../services/factory.js";
 import cabinaJson from '../files/cabina.json' assert { type: 'json' };
-
-const { Client, noAuth} = pkg;
+import { NoAuth } from "whatsapp-web.js";
+const { Client} = pkg;
 const router= Router();
 let response;
 
 
 const client = new Client({
-    authStrategy: new noAuth()
+    authStrategy: new NoAuth()
 })
     
 client.on('ready', () => {
