@@ -10,7 +10,8 @@ const { RemoteAuth, Client } = pkg;
 const router= Router();
 let response;
 
-mongoose.connect(process.env.MONGO_URI).then(() => {
+
+const whatsappClient= () => {
     const store = new MongoStore({ mongoose: mongoose });
     const client = new Client({
         authStrategy: new RemoteAuth({
@@ -345,7 +346,7 @@ mongoose.connect(process.env.MONGO_URI).then(() => {
             return `Error en el fetch: ${error.message}`;
         }
     }
-});
+};
 
 
 async function procesarHorario(numeroDestinoc,respuesta,diaDeHoy) {
@@ -394,7 +395,7 @@ Día: ${dia}
     await whatsappService.updateSteps(numeroDestinoc, 3);
 }
 
-
+whatsappClient();
 
 
 
