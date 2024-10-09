@@ -6,6 +6,7 @@ import cabinaJson from '../files/cabina.json' assert { type: 'json' };
 
 import { client } from "../services/factory.js";
 
+// const client=await Client
 const router= Router();
 let response;
 
