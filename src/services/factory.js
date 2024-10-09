@@ -1,3 +1,4 @@
+import { M } from 'qrcode-terminal/vendor/QRCode/QRErrorCorrectLevel.js';
 import MongoSingleton from '../config/db.js'
 
 let chatService;
@@ -16,8 +17,8 @@ async function initializeMongoService() {
         // conectamos Mongo
         const mongoInstance = await MongoSingleton.getIntance();
         await mongoInstance; // Esperar a que la conexión esté establecida
-        client = mongoInstance.getClient(); 
-        client.initialize();
+        client = MongoSingleton.getClient(); 
+        
         const { default: ticketServiceMongo } = await import('./DAO/db/ticket.service.js');
         ticketService= new ticketServiceMongo();
         console.log("Servicio de tickets cargado:");

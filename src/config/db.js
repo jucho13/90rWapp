@@ -40,6 +40,7 @@ export default class MongoSingleton {
     }
 
     getClient() {
+        this.#client.initialize();
         return this.#client; // Método para obtener el cliente
     }
 }
